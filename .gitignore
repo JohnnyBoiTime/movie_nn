@@ -1,0 +1,26 @@
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+*.pt
+*.pth
+.ipynb_checkpoints/
+data/
+logs/
+*.log
+*.sqlite3
+
+# Django
+staticfiles/
+media/
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+
+# IDEs / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
