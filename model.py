@@ -7,10 +7,10 @@ class MovieRecModel(nn.Module):
     def __init__(self, numUsers, numMovies, embeddingSize=50):
         super().__init__() # initialize parent class attributes first
         self.userEmbedding = nn.Embedding(numUsers, embeddingSize)
-        self.movieEmbegging = nn.Embedding(numMovies, embeddingSize)
+        self.movieEmbedding = nn.Embedding(numMovies, embeddingSize)
 
     # forward pass
     def forward(self, userIndices, movieIndices):
         userEmbeds = self.userEmbedding(userIndices)
-        movieEmbeds = self.movieEmbegging(movieIndices)
+        movieEmbeds = self.movieEmbedding(movieIndices)
         return (userEmbeds * movieEmbeds).sum(dim = 1)
