@@ -9,12 +9,12 @@ scriptDirectory = os.path.dirname(os.path.abspath(__file__))
 projectRoot = os.path.abspath(os.path.join(scriptDirectory, os.pardir))
 
 # Find out where the raw data and processed data live
-rawDataDurectory = os.path.join(projectRoot, "data", "rawData")
+rawDataDirectory = os.path.join(projectRoot, "data", "rawData")
 processedDataDirectory = os.path.join(projectRoot, "data", "processed")
 
 # Load data sets from the ml csv
-ratings = pd.read_csv('../../data/rawData/ratings.csv')
-movies = pd.read_csv('../../data/rawData/movies.csv')
+ratings = pd.read_csv(os.path.join(rawDataDirectory, "ratings.csv"))
+movies = pd.read_csv(os.path.join(rawDataDirectory, "movies.csv"))
 
 # drop dupes
 ratings = ratings.drop_duplicates(subset=['userId', "movieId"])
@@ -60,15 +60,16 @@ trainingDataFrame, validationDataFrame = train_test_split(
 )
 
 # Save processed data to csv files:
-trainingDataFrame.to_csv(os.path.join("data", "processed", "training.csv"), index=False)
-validationDataFrame.to_csv(os.path.join("data", "processed", "validation.csv"), index=False)
-testingDataFrame.to_csv(os.path.join("data", "processed", "testing.csv"), index=False)
+trainingDataFrame.to_csv(os.path.join(processedDataDirectory, "training.csv"), index=False)
+validationDataFrame.to_csv(os.path.join(processedDataDirectory, "validation.csv"), index=False)
+testingDataFrame.to_csv(os.path.join(processedDataDirectory, "testing.csv"), index=False)
 
 # Save label encoders
-with open(os.path.join("data", "processed", "userEncoder.pkl"), "wb") as f:
+with open(os.path.join(processedDataDirectory, "userEncoder.pkl"), "wb") as f:
     pickle.dump(userLabels, f)
 
-with open(os.path.join("data", "processed", "movieEncoder.pkl"), "wb") as f:
+with open(os.path.join(processedDataDirectory, "movieEncoder.pkl"), "wb") as f:
     pickle.dump(movieLabels, f)
 
+# Need for later
 print(f"Number of users: {users}, number of movies:{movies}")
