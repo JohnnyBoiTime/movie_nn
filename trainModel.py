@@ -27,6 +27,8 @@ numberEpochs = 10
 
 # Go through the network!
 for epoch in range(1, numberEpochs + 1):
+
+    # Train the model
     model.train()
     totalTrainingLoss = 0.0
 
@@ -53,8 +55,47 @@ for epoch in range(1, numberEpochs + 1):
         # Loss for the epoch
         totalTrainingLoss += loss.item() * users.size(0)
 
-    averageTrainingLoss = totalTrainingLoss / len(trainingDataset)
-    trainingRMSE = averageTrainingLoss ** 0.5
-    print(f"Current epoch: {epoch}, RMSE = {trainingRMSE:.4f}")
+        # calc RMSE
+        averageTrainingLoss = totalTrainingLoss / len(trainingDataset)
+        trainingRMSE = averageTrainingLoss ** 0.5
 
+    # Evaluate the model, pretty much the same thing as above,
+    # only applied to validating the data now
+    model.eval()
+
+    totalValidationLoss = 0
+    with torch.no_grad():
+        for users, movies, ratings in validationLoader:
+            users, movies, ratings = (
+                users.to(gpuFound),
+                movies.to(gpuFound),
+                ratings.to(gpuFound)
+            )
+
+            output = model(users, movies)
+            totalValidationLoss += calcLoss(output, ratings).item() * users.size(0)
+
+        averageValidationLoss = totalValidationLoss / len(validationDataset)
+        validationRMSE = averageValidationLoss ** 0.5
+
+    print(f"Current epoch: {epoch} training RMSE={trainingRMSE:.4f}, validation RMSE={validationRMSE:.4f}")
+
+# Now, we do testing!
+model.eval()
+totalTestingLoss = 0.0
+with torch.no_grad():
+    for users, movies, ratings in testingLoader:
+        users, movies, ratings = (
+            users.to(gpuFound),
+            movies.to(gpuFound),
+            ratings.to(gpuFound)
+        )
+
+        output = model(users, movies)
+        totalTestingLoss += calcLoss(output, ratings).item() * users.size(0)
+
+    averageTestingLoss = totalTestingLoss / len(testDataset)
+    testingRMSE = averageTestingLoss ** 0.5
+
+# Save the model to use!
 torch.save(model.state_dict(), "models/movierec.pth")
