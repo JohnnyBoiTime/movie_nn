@@ -9,16 +9,16 @@ class RatingsDataset(Dataset):
     def __init__(self, csvPath):
         self.df = pd.read_csv(csvPath)
 
-        # Get length of dataset
-        def __len__(self):
-            return len(self.df)
-        
-        # Turn into tensors
-        def __getitem__(self, idx):
-            row = self.df.iloc[idx]
-            return (
-                torch.tensor(int(row.userIndex), dtype=torch.long),
-                torch.tensor(int(row.movieIndex), dtype=torch.long),
-                torch.tensor(row.rating, dtype=torch.float),
-            )
+    # Get length of dataset
+    def __len__(self):
+        return len(self.df)
+    
+    # Turn into tensors
+    def __getitem__(self, idx):
+        row = self.df.iloc[idx]
+        return (
+            torch.tensor(int(row.userIndex), dtype=torch.long),
+            torch.tensor(int(row.movieIndex), dtype=torch.long),
+            torch.tensor(row.rating, dtype=torch.float),
+        )
             
