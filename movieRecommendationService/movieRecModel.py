@@ -9,11 +9,11 @@ currentDirectory = os.path.dirname(os.path.abspath(__file__))
 
 projectRoot = os.path.abspath(os.path.join(currentDirectory, os.pardir))
 
-rawDataDirectory = os.path.join(projectRoot, "movie_nn", "data", "rawData")
+rawDataDirectory = os.path.join(projectRoot, "data", "rawData")
 
-pickleDirectory = os.path.join(projectRoot, "movie_nn", "data", "processed", "movieEncoder.pkl")
+pickleDirectory = os.path.join(projectRoot, "data", "processed", "movieEncoder.pkl")
 
-trainedModel = os.path.join(projectRoot, "movie_nn", "models", "movierec.pth")
+trainedModel = os.path.join(projectRoot, "models", "movierec.pth")
 
 movies = pd.read_csv(os.path.join(rawDataDirectory, "movies.csv"))
 
@@ -46,13 +46,16 @@ movieEmbedds = model.movieEmbedding.weight.data.cpu()
 
 # Test the model
 def recommendationSystemTest(movieTitle, k=5):
+    year = str(input("What year did the movie come out? "))
+    query = movieTitle + ' (' + year + ')'
+    print(query)
 
     # Make sure movie title is valid!
-    if movieTitle not in titleToMovieId:
+    if query not in titleToMovieId:
         raise KeyError("Movie does not exist in this model or incorrect input format")
     
     # convert title to its corresponding ID in the dictionary
-    movieID = titleToMovieId.get(movieTitle)
+    movieID = titleToMovieId.get(query)
     index = classes[movieID]
     if index is None:
         raise KeyError(f"Movie ID {movieTitle} is not in the pickle encoder")
