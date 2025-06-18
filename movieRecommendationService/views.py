@@ -11,8 +11,9 @@ from .movieRecModel import recommendationSystemTest
 class RecommendationView(APIView):
     def get(self, request):
         movieTitle = request.query_params.get('title')
+        movieYear = request.query_params.get('year')
         k = int(request.query_params.get('k', 5))
-        recommendation = recommendationSystemTest(movieTitle, k)
+        recommendation = recommendationSystemTest(movieTitle, movieYear, k)
         data = [{'Movie: ': movie, 'Similarity Score': score} for movie, score in recommendation]
         return JsonResponse({'Top recommendations': data}, 
                         json_dumps_params={'indent': 2})

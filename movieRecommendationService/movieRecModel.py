@@ -45,10 +45,8 @@ model.eval()
 movieEmbedds = model.movieEmbedding.weight.data.cpu()
 
 # Test the model
-def recommendationSystemTest(movieTitle, k=5):
-    year = str(input("What year did the movie come out? "))
-    query = movieTitle + ' (' + year + ')'
-    print(query)
+def recommendationSystemTest(movieTitle, movieYear, k=5):
+    query = movieTitle + ' (' + movieYear + ')'
 
     # Make sure movie title is valid!
     if query not in titleToMovieId:
