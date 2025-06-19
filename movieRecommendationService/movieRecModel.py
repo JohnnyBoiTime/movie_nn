@@ -43,6 +43,7 @@ model.load_state_dict(torch.load(trainedModel, map_location=gpuFound))
 model.eval()
 
 movieEmbedds = model.movieEmbedding.weight.data.cpu()
+movieEmbedds = F.normalize(movieEmbedds, dim=1)
 
 # Test the model
 def recommendationSystemTest(movieTitle, movieYear, k=5):
@@ -65,7 +66,7 @@ def recommendationSystemTest(movieTitle, movieYear, k=5):
     topKValues, topKIndexes = torch.topk(calcSimilarity, k)
 
     # We found the simular movies
-    return [(movieIdToTitle.get(indexToMovie[index.item()]), topKValues[j].item())
+    return [( movieIdToTitle.get(indexToMovie[index.item()]), topKValues[j].item())
         for j, index in enumerate(topKIndexes)]
 
 

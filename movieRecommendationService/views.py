@@ -14,8 +14,18 @@ class RecommendationView(APIView):
         movieYear = request.query_params.get('year')
         k = int(request.query_params.get('k', 5))
         recommendation = recommendationSystemTest(movieTitle, movieYear, k)
-        data = [{'Movie: ': movie, 'Similarity Score': score} for movie, score in recommendation]
-        return JsonResponse({'Top recommendations': data}, 
-                        json_dumps_params={'indent': 2})
+        # Include id so we can render in next js using .map
+        data = [
+            {
+                "id": index,
+                'movie': movie, 
+                'similarityScore': score
+            } 
+            for index, (movie, score) in enumerate(recommendation, start=1)
+            ]
+        return JsonResponse(data,
+                            safe=False, 
+                            json_dumps_params={'indent': 2}
+                            )
     
 
