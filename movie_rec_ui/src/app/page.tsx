@@ -1,6 +1,5 @@
 'use client'
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SubmissionForm, {Movies} from "./components/submitForm";
 import api from "./apiRoutes/api";
 
