@@ -57,6 +57,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",     
     "http://127.0.0.1:3000",
+    "https://movierecommendation-9vh1rf0o8-philip-rickeys-projects.vercel.app",
 ]
 
 ROOT_URLCONF = 'movieRecproj.urls'
