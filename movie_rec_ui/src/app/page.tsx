@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import SubmissionForm, {Movies} from "./components/submitForm";
-import axios from "axios";
+import api from "./apiRoutes/api";
 
 // Format of the json response
 interface Movie {
@@ -23,7 +23,7 @@ export default function Home() {
 
     // Send info from the form to the api endpoint
     try {
-      const nnResponse = await axios.get("http://127.0.0.1:8000/api/movieRecommendationService/",
+      const nnResponse = await api.get("/movieRecommendationService/",
         {
           params: {title, year, k}
         }
