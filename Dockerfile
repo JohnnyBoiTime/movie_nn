@@ -28,4 +28,4 @@ EXPOSE 8000
 
 # Start django app and bind interface to 8000, will change to something
 # else later
-CMD ["python", "manage.py", "runserver", "--bind", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
