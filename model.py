@@ -6,7 +6,7 @@ import torch.nn.functional as F
 
 # inherits attributes from nn.Module
 class MovieRecModel(nn.Module):
-    def __init__(self, numUsers, numMovies, numGenres, HLSize=128,  embeddingSize=64, dropout=0.5):
+    def __init__(self, numUsers, numMovies, numGenres, HLSize=64,  embeddingSize=32, dropout=0.5):
         super().__init__() # initialize parent class attributes first
 
         # Embedding users + movies

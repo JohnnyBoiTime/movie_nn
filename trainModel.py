@@ -18,7 +18,7 @@ def main():
     testingLoader = DataLoader(testDataset, batch_size=512, shuffle=False, num_workers=4)
 
     gpuFound = torch.device("cuda" if torch.cuda.is_available() else "cpu") # check if GPU is available
-    model = MovieRecModel(numMovies=3650, numUsers = 610, numGenres = 20, HLSize=128, embeddingSize=64, dropout=0.5).to(gpuFound) # train on GPU, default CPU
+    model = MovieRecModel(numMovies=3650, numUsers = 610, numGenres = 20, HLSize=64, embeddingSize=32, dropout=0.5).to(gpuFound) # train on GPU, default CPU
 
     # calc loss and also optimze using the learning rate, low learning rate for slower learning
     calcLoss = nn.MSELoss()

@@ -29,14 +29,8 @@ with open(pickleDirectory, "rb") as f:
 classes = movieEncoder.classes_    
 indexToMovie = {i: classes[i] for i in range(len(classes))}
 
-# params set for model
-numUsers = 610
-numMovies = len(classes)
-embeddingSize = 50
-
-
 gpuFound = torch.device("cuda" if torch.cuda.is_available() else "cpu") # check if GPU is available
-model = MovieRecModel(numUsers, numMovies, embeddingSize).to(gpuFound) # Load it to GPU or CPU
+model = MovieRecModel(numMovies=3650, numUsers = 610, numGenres = 20, HLSize=64, embeddingSize=32, dropout=0.5).to(gpuFound) # Load it to GPU or CPU
 
 # Load trained model
 model.load_state_dict(torch.load(trainedModel, map_location=gpuFound))
