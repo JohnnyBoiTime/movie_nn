@@ -48,15 +48,15 @@ def recommendationSystemTest(movieTitle, movieYear, k=5):
         raise KeyError("Movie does not exist in this model or incorrect input format")
     
     # convert title to its corresponding ID in the dictionary
-    movieID = titleToMovieId.get(query)
-    index = classes[movieID]
+    movieID = titleToMovieId[query]
+    index = movieEncoder.transform([movieID])[0]
     if index is None:
         raise KeyError(f"Movie ID {movieTitle} is not in the pickle encoder")
     
     # It is confirmed to exist, now find similar movies!
     queryVector = movieEmbedds[index].unsqueeze(0)
     calcSimilarity = F.cosine_similarity(queryVector, movieEmbedds)
-    calcSimilarity[index] = -1.0 # Don't recommend the same movie
+    # calcSimilarity[index] = -1.0 # Don't recommend the same movie
     topKValues, topKIndexes = torch.topk(calcSimilarity, k)
 
     # We found the simular movies
