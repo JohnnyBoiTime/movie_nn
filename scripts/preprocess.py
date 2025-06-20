@@ -35,6 +35,7 @@ for index, genre in enumerate(labelBinarizer.classes_):
 # Filter our users with very few ratings, insignificant
 numUsers = ratings.userId.value_counts()
 numMovies = ratings.movieId.value_counts()
+numGenres = genreMatrix.shape[1]
 
 # Keep users and movies that have at least 5 ratings
 signifUsers = numUsers[numUsers >= 5].index
@@ -88,4 +89,4 @@ with open(os.path.join(processedDataDirectory, "movieEncoder.pkl"), "wb") as f:
     pickle.dump(movieLabels, f)
 
 # Need for later
-print(f"Number of users: {numUsers}, number of movies:{numMovies}")
+print(f"Number of users: {numUsers}, number of movies:{numMovies}, number of genres: {numGenres}")
