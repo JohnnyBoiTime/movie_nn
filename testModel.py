@@ -1,4 +1,4 @@
-from recommendation import recommendationSystemTest
+from movie_nn.recommendation import recommendationSystemTest
 
 if __name__ == "__main__":
 

@@ -1,0 +1,14 @@
+Put RMSE's of previous tests here:
+
+urrent epoch: 1 training RMSE=7.6581, trainingDROPOUT = 8.1309, validation RMSE=7.8545
+Current epoch: 2 training RMSE=7.1426, trainingDROPOUT = 7.5236, validation RMSE=7.5231
+Current epoch: 3 training RMSE=6.6286, trainingDROPOUT = 7.0198, validation RMSE=7.1764
+Current epoch: 4 training RMSE=6.1568, trainingDROPOUT = 6.5580, validation RMSE=6.8484
+Current epoch: 5 training RMSE=5.7556, trainingDROPOUT = 6.1720, validation RMSE=6.5670
+Current epoch: 6 training RMSE=5.3959, trainingDROPOUT = 5.8248, validation RMSE=6.3086
+Current epoch: 7 training RMSE=5.0888, trainingDROPOUT = 5.5258, validation RMSE=6.0948
+Current epoch: 8 training RMSE=4.7863, trainingDROPOUT = 5.2528, validation RMSE=5.8938
+Current epoch: 9 training RMSE=4.5426, trainingDROPOUT = 5.0295, validation RMSE=5.7197
+Current epoch: 10 training RMSE=4.3055, trainingDROPOUT = 4.7878, validation RMSE=5.5657
+testing RMSE = 5.5364
+Finished!
