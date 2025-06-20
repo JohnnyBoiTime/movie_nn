@@ -9,11 +9,11 @@ currentDirectory = os.path.dirname(os.path.abspath(__file__))
 
 projectRoot = os.path.abspath(os.path.join(currentDirectory, os.pardir))
 
-rawDataDirectory = os.path.join(projectRoot, "movie_nn", "data", "rawData")
+rawDataDirectory = os.path.join(projectRoot, "data", "rawData")
 
-pickleDirectory = os.path.join(projectRoot, "movie_nn", "data", "processed", "movieEncoder.pkl")
+pickleDirectory = os.path.join(projectRoot, "data", "processed", "movieEncoder.pkl")
 
-trainedModel = os.path.join(projectRoot, "movie_nn", "models", "movierec.pth")
+trainedModel = os.path.join(projectRoot, "models", "movierec.pth")
 
 movies = pd.read_csv(os.path.join(rawDataDirectory, "movies.csv"))
 
@@ -29,30 +29,26 @@ with open(pickleDirectory, "rb") as f:
 classes = movieEncoder.classes_    
 indexToMovie = {i: classes[i] for i in range(len(classes))}
 
-# params set for model
-numUsers = 610
-numMovies = len(classes)
-embeddingSize = 50
-
-
 gpuFound = torch.device("cuda" if torch.cuda.is_available() else "cpu") # check if GPU is available
-model = MovieRecModel(numUsers, numMovies, embeddingSize).to(gpuFound) # Load it to GPU or CPU
+model = MovieRecModel(numMovies=3650, numUsers = 610, numGenres = 20, HLSize=64, embeddingSize=32, dropout=0.5).to(gpuFound) # Load it to GPU or CPU
 
 # Load trained model
 model.load_state_dict(torch.load(trainedModel, map_location=gpuFound))
 model.eval()
 
 movieEmbedds = model.movieEmbedding.weight.data.cpu()
+movieEmbedds = F.normalize(movieEmbedds, dim=1)
 
 # Test the model
-def recommendationSystemTest(movieTitle, k=5):
+def recommendationSystemTest(movieTitle, movieYear, k=5):
+    query = movieTitle + ' (' + movieYear + ')'
 
     # Make sure movie title is valid!
-    if movieTitle not in titleToMovieId:
+    if query not in titleToMovieId:
         raise KeyError("Movie does not exist in this model or incorrect input format")
     
     # convert title to its corresponding ID in the dictionary
-    movieID = titleToMovieId.get(movieTitle)
+    movieID = titleToMovieId.get(query)
     index = classes[movieID]
     if index is None:
         raise KeyError(f"Movie ID {movieTitle} is not in the pickle encoder")
@@ -64,7 +60,7 @@ def recommendationSystemTest(movieTitle, k=5):
     topKValues, topKIndexes = torch.topk(calcSimilarity, k)
 
     # We found the simular movies
-    return [(movieIdToTitle.get(indexToMovie[index.item()]), topKValues[j].item())
+    return [( movieIdToTitle.get(indexToMovie[index.item()]), topKValues[j].item())
         for j, index in enumerate(topKIndexes)]
 
 
