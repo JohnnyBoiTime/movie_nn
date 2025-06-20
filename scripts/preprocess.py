@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import pickle
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, MultiLabelBinarizer
 from sklearn.model_selection import train_test_split
 
 # Find where this script lies:
@@ -14,10 +14,23 @@ processedDataDirectory = os.path.join(projectRoot, "data", "processed")
 
 # Load data sets from the ml csv
 ratings = pd.read_csv(os.path.join(rawDataDirectory, "ratings.csv"))
-movies = pd.read_csv(os.path.join(rawDataDirectory, "movies.csv"))
+moviesDataFrame = pd.read_csv(os.path.join(rawDataDirectory, "movies.csv"))
 
 # drop dupes
 ratings = ratings.drop_duplicates(subset=['userId', "movieId"])
+
+# Split the genres into lists
+moviesDataFrame["genreList"] = moviesDataFrame.genres.str.split("|")
+
+# Make sets of labels for the genres. Basically:
+# 1 = genre is for the specific movie
+# 0 = genre is NOT for the specific movie
+labelBinarizer = MultiLabelBinarizer()
+genreMatrix = labelBinarizer.fit_transform(moviesDataFrame["genreList"])
+
+# Map the genres back into the movies
+for index, genre in enumerate(labelBinarizer.classes_):
+    moviesDataFrame[genre] = genreMatrix[:, index]
 
 # Filter our users with very few ratings, insignificant
 numUsers = ratings.userId.value_counts()
@@ -42,8 +55,8 @@ ratings["userIndex"] = userLabels.fit_transform(ratings.userId)
 ratings["movieIndex"] = movieLabels.fit_transform(ratings.movieId)
 
 # Count unique indeces for the users and movies
-users = ratings.userIndex.nunique()
-movies = ratings.movieIndex.nunique()
+numUsers = ratings.userIndex.nunique()
+numMovies = ratings.movieIndex.nunique()
 
 # split data into training and testing sets
 # 0.2 = 20% data will be put into testing, 80% put in training
@@ -63,6 +76,9 @@ trainingDataFrame, validationDataFrame = train_test_split(
 trainingDataFrame.to_csv(os.path.join(processedDataDirectory, "training.csv"), index=False)
 validationDataFrame.to_csv(os.path.join(processedDataDirectory, "validation.csv"), index=False)
 testingDataFrame.to_csv(os.path.join(processedDataDirectory, "testing.csv"), index=False)
+moviesDataFrame[
+    ["movieId", "title"] + list(labelBinarizer.classes_)
+].to_csv(os.path.join(processedDataDirectory, "processedMovies.csv"), index=False)    
 
 # Save label encoders
 with open(os.path.join(processedDataDirectory, "userEncoder.pkl"), "wb") as f:
@@ -72,4 +88,4 @@ with open(os.path.join(processedDataDirectory, "movieEncoder.pkl"), "wb") as f:
     pickle.dump(movieLabels, f)
 
 # Need for later
-print(f"Number of users: {users}, number of movies:{movies}")
+print(f"Number of users: {numUsers}, number of movies:{numMovies}")
