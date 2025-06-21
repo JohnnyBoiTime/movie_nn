@@ -15,6 +15,14 @@ processedDataDirectory = os.path.join(projectRoot, "data", "processed")
 # Load data sets from the ml csv
 ratings = pd.read_csv(os.path.join(rawDataDirectory, "ratings.csv"))
 moviesDataFrame = pd.read_csv(os.path.join(rawDataDirectory, "movies.csv"))
+tagsDataFrame = pd.read_csv(os.path.join(rawDataDirectory, "tags.csv"))
+
+ratingsAndMovies = pd.merge(ratings, moviesDataFrame, on="movieId", how="left")
+fullData = pd.merge(ratingsAndMovies, tagsDataFrame, on="movieId", how="left")
+
+fullData = fullData.drop_duplicates(subset=["userId", "movieId"])
+
+print(fullData)
 
 # drop dupes
 ratings = ratings.drop_duplicates(subset=['userId', "movieId"])
@@ -25,17 +33,26 @@ moviesDataFrame["genreList"] = moviesDataFrame.genres.str.split("|")
 # Make sets of labels for the genres. Basically:
 # 1 = genre is for the specific movie
 # 0 = genre is NOT for the specific movie
-labelBinarizer = MultiLabelBinarizer()
-genreMatrix = labelBinarizer.fit_transform(moviesDataFrame["genreList"])
+genreBinarizer = MultiLabelBinarizer()
+genreMatrix = genreBinarizer.fit_transform(moviesDataFrame["genreList"])
 
 # Map the genres back into the movies
-for index, genre in enumerate(labelBinarizer.classes_):
+for index, genre in enumerate(genreBinarizer.classes_):
     moviesDataFrame[genre] = genreMatrix[:, index]
 
-# Filter our users with very few ratings, insignificant
+
+tagsDataFrame["tagsList"] = tagsDataFrame.tag
+
+tagBinarizer = MultiLabelBinarizer()
+tagMatrix = tagBinarizer.fit_transform(tagsDataFrame["tagsList"])
+
+print(tagMatrix)
+
+# Get number of things to use in the network later
 numUsers = ratings.userId.value_counts()
 numMovies = ratings.movieId.value_counts()
 numGenres = genreMatrix.shape[1]
+numTags = tagMatrix.shape[1]
 
 # Keep users and movies that have at least 5 ratings
 signifUsers = numUsers[numUsers >= 5].index
@@ -78,7 +95,7 @@ trainingDataFrame.to_csv(os.path.join(processedDataDirectory, "training.csv"), i
 validationDataFrame.to_csv(os.path.join(processedDataDirectory, "validation.csv"), index=False)
 testingDataFrame.to_csv(os.path.join(processedDataDirectory, "testing.csv"), index=False)
 moviesDataFrame[
-    ["movieId", "title"] + list(labelBinarizer.classes_)
+    ["movieId", "title"] + list(genreBinarizer.classes_)
 ].to_csv(os.path.join(processedDataDirectory, "processedMovies.csv"), index=False)    
 
 # Save label encoders
@@ -89,4 +106,4 @@ with open(os.path.join(processedDataDirectory, "movieEncoder.pkl"), "wb") as f:
     pickle.dump(movieLabels, f)
 
 # Need for later
-print(f"Number of users: {numUsers}, number of movies:{numMovies}, number of genres: {numGenres}")
+print(f"Number of users: {numUsers}, number of movies:{numMovies}, number of genres: {numGenres}, number of tags: {numTags}")
