@@ -15,14 +15,6 @@ processedDataDirectory = os.path.join(projectRoot, "data", "processed")
 # Load data sets from the ml csv
 ratings = pd.read_csv(os.path.join(rawDataDirectory, "ratings.csv"))
 moviesDataFrame = pd.read_csv(os.path.join(rawDataDirectory, "movies.csv"))
-tagsDataFrame = pd.read_csv(os.path.join(rawDataDirectory, "tags.csv"))
-
-ratingsAndMovies = pd.merge(ratings, moviesDataFrame, on="movieId", how="left")
-fullData = pd.merge(ratingsAndMovies, tagsDataFrame, on="movieId", how="left")
-
-fullData = fullData.drop_duplicates(subset=["userId", "movieId"])
-
-print(fullData)
 
 # drop dupes
 ratings = ratings.drop_duplicates(subset=['userId', "movieId"])
@@ -40,20 +32,10 @@ genreMatrix = genreBinarizer.fit_transform(moviesDataFrame["genreList"])
 for index, genre in enumerate(genreBinarizer.classes_):
     moviesDataFrame[genre] = genreMatrix[:, index]
 
-
-tagsDataFrame["tagsList"] = tagsDataFrame.tag
-
-tagBinarizer = MultiLabelBinarizer()
-tagMatrix = tagBinarizer.fit_transform(tagsDataFrame["tagsList"])
-
-print(tagMatrix)
-
 # Get number of things to use in the network later
 numUsers = ratings.userId.value_counts()
 numMovies = ratings.movieId.value_counts()
 numGenres = genreMatrix.shape[1]
-numTags = tagMatrix.shape[1]
-
 # Keep users and movies that have at least 5 ratings
 signifUsers = numUsers[numUsers >= 5].index
 signifMovies = numMovies[numMovies >= 5].index
@@ -106,4 +88,4 @@ with open(os.path.join(processedDataDirectory, "movieEncoder.pkl"), "wb") as f:
     pickle.dump(movieLabels, f)
 
 # Need for later
-print(f"Number of users: {numUsers}, number of movies:{numMovies}, number of genres: {numGenres}, number of tags: {numTags}")
+print(f"Number of users: {numUsers}, number of movies:{numMovies}, number of genres: {numGenres}")
