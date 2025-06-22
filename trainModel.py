@@ -1,4 +1,5 @@
 import torch
+import os
 from torch import nn, optim
 from torch.utils.data import DataLoader
 from datasets import RatingsDataset
@@ -6,10 +7,34 @@ from model import MovieRecModel
 
 
 def main(): 
+
+    currentDirectory = os.path.dirname(os.path.abspath(__file__))
+
+    projectRoot = os.path.abspath(os.path.join(currentDirectory, os.pardir))
+
+    userPickle = os.path.join(projectRoot, "movie_nn", "data", "processed", "userEncoder.pkl")
+    moviePickle = os.path.join(projectRoot, "movie_nn", "data", "processed", "movieEncoder.pkl")
+    genrePickle = os.path.join(projectRoot, "movie_nn", "data", "processed", "genreBinarizer.pkl")
+
     # Create data sets from the csv's
-    trainingDataset = RatingsDataset("data/processed/training.csv", "data/processed/processedMovies.csv")
-    validationDataset = RatingsDataset("data/processed/validation.csv", "data/processed/processedMovies.csv")
-    testDataset = RatingsDataset("data/processed/testing.csv", "data/processed/processedMovies.csv")
+    trainingDataset = RatingsDataset("data/processed/training.csv", 
+                                        "data/processed/processedMovies.csv",
+                                        userPickle,
+                                        moviePickle,
+                                        genrePickle
+                                        )
+    validationDataset = RatingsDataset("data/processed/validation.csv", 
+                                        "data/processed/processedMovies.csv",
+                                        userPickle,
+                                        moviePickle,
+                                        genrePickle
+                                        )
+    testDataset = RatingsDataset("data/processed/testing.csv", 
+                                        "data/processed/processedMovies.csv",
+                                         userPickle,
+                                         moviePickle,
+                                         genrePickle
+                                         )
 
     # Loads them up. Shuffle training for randomness, but we need validation and testing to be more concrete
     # and deterministic
@@ -17,8 +42,15 @@ def main():
     validationLoader = DataLoader(validationDataset, batch_size=512, shuffle=False, num_workers=4)
     testingLoader = DataLoader(testDataset, batch_size=512, shuffle=False, num_workers=4)
 
-    gpuFound = torch.device("cuda" if torch.cuda.is_available() else "cpu") # check if GPU is available
-    model = MovieRecModel(numMovies=3650, numUsers = 610, numGenres = 20, HLSize=64, embeddingSize=32, dropout=0.5).to(gpuFound) # train on GPU, default CPU
+    numUsersFound = len(trainingDataset.userLE.classes_)
+    numMoviesFound = len(trainingDataset.movieLE.classes_)
+    numGenresFound = len(trainingDataset.genreLE.classes_)
+
+    print(numUsersFound, numMoviesFound, numGenresFound)
+
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # check if GPU is available
+    model = MovieRecModel(numMovies=numMoviesFound, numUsers = numUsersFound, numGenres = numGenresFound, HLSize=64, userMovieEmbedSize=32, genreEmbedSize=8).to(device) # train on GPU, default CPU
 
     # calc loss and also optimze using the learning rate, low learning rate for slower learning
     calcLoss = nn.MSELoss()
@@ -38,10 +70,10 @@ def main():
         for users, movies, ratings, genres in trainingLoader:
             # Use GPU or CPU
             users, movies, ratings, genres = (
-                users.to(gpuFound),
-                movies.to(gpuFound),
-                ratings.to(gpuFound),
-                genres.to(gpuFound)
+                users.to(device),
+                movies.to(device),
+                ratings.to(device),
+                genres.to(device)
             )
 
             # Zero old gradients, take networks output,
@@ -60,20 +92,21 @@ def main():
             # Loss for the epoch
             totalTrainingLoss += loss.item() * users.size(0)
 
-        averageTrainingLossD = totalTrainingLoss / len(trainingDataset)
-        trainingRMSED = averageTrainingLossD ** 0.5
+        averageTrainingLoss = totalTrainingLoss / len(trainingDataset)
+        trainingRMSE = averageTrainingLoss ** 0.5
 
-        
+        """
+        # Evaluate the model!
         model.eval()
         newTotalTrainingLoss = 0.0
         with torch.no_grad():
               for users, movies, ratings, genres in trainingLoader:
                  # Use GPU or CPU
                 users, movies, ratings, genres = (
-                    users.to(gpuFound),
-                    movies.to(gpuFound),
-                    ratings.to(gpuFound),
-                    genres.to(gpuFound)
+                    users.to(device),
+                    movies.to(device),
+                    ratings.to(device),
+                    genres.to(device)
             )
 
                 output = model(users, movies, genres)
@@ -83,16 +116,18 @@ def main():
         averageTrainingLoss = newTotalTrainingLoss / len(trainingDataset)
         trainingRMSE = averageTrainingLoss ** 0.5
 
+        """
+        model.eval()
         totalValidationLoss = 0
         with torch.no_grad():
             for users, movies, ratings, genres in validationLoader:
                  # Use GPU or CPU
                 users, movies, ratings, genres = (
-                    users.to(gpuFound),
-                    movies.to(gpuFound),
-                    ratings.to(gpuFound),
-                    genres.to(gpuFound)
-            )
+                    users.to(device),
+                    movies.to(device),
+                    ratings.to(device),
+                    genres.to(device),
+                )
 
                 output = model(users, movies, genres)
                 totalValidationLoss += calcLoss(output, ratings).item() * users.size(0)
@@ -101,7 +136,7 @@ def main():
         averageValidationLoss = totalValidationLoss / len(validationDataset)
         validationRMSE = averageValidationLoss ** 0.5
 
-        print(f"Current epoch: {epoch} training RMSE={trainingRMSE:.4f}, trainingDROPOUT = {trainingRMSED:.4f}, validation RMSE={validationRMSE:.4f}")
+        print(f"Current epoch: {epoch} training RMSE={trainingRMSE:.4f}, validation RMSE={validationRMSE:.4f}")
 
     # Now, we do testing!
     model.eval()
@@ -109,10 +144,10 @@ def main():
     with torch.no_grad():
         for users, movies, ratings, genres in testingLoader:
             users, movies, ratings, genres = (
-                users.to(gpuFound),
-                movies.to(gpuFound),
-                ratings.to(gpuFound),
-                genres.to(gpuFound)
+                users.to(device),
+                movies.to(device),
+                ratings.to(device),
+                genres.to(device)
             )
 
             output = model(users, movies, genres)

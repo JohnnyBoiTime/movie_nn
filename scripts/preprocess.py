@@ -36,6 +36,7 @@ for index, genre in enumerate(genreBinarizer.classes_):
 numUsers = ratings.userId.value_counts()
 numMovies = ratings.movieId.value_counts()
 numGenres = genreMatrix.shape[1]
+
 # Keep users and movies that have at least 5 ratings
 signifUsers = numUsers[numUsers >= 5].index
 signifMovies = numMovies[numMovies >= 5].index
@@ -86,6 +87,10 @@ with open(os.path.join(processedDataDirectory, "userEncoder.pkl"), "wb") as f:
 
 with open(os.path.join(processedDataDirectory, "movieEncoder.pkl"), "wb") as f:
     pickle.dump(movieLabels, f)
+
+# Save the genre binarizer for later training
+with open(os.path.join(processedDataDirectory, "genreBinarizer.pkl"), "wb") as f:    
+    pickle.dump(genreBinarizer, f)
 
 # Need for later
 print(f"Number of users: {numUsers}, number of movies:{numMovies}, number of genres: {numGenres}")

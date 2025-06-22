@@ -11,29 +11,56 @@ projectRoot = os.path.abspath(os.path.join(currentDirectory, os.pardir))
 
 rawDataDirectory = os.path.join(projectRoot, "data", "rawData")
 
-pickleDirectory = os.path.join(projectRoot, "data", "processed", "movieEncoder.pkl")
+moviePicke = os.path.join(projectRoot, "data", "processed", "movieEncoder.pkl")
+genrePickle = os.path.join(projectRoot, "data", "processed", "genreBinarizer.pkl")
 
 trainedModel = os.path.join(projectRoot, "models", "movierec.pth")
 
 movies = pd.read_csv(os.path.join(rawDataDirectory, "movies.csv"))
 
+movieDF = pd.read_csv(os.path.join(projectRoot, "data", "processed", "processedMovies.csv"))
+
 # Make it so user can simply type a string to get similar movies
 movieIdToTitle = dict(zip(movies.movieId, movies.title))
 titleToMovieId = dict(zip(movies.title, movies.movieId))
 
-# Grab and load the pickle
-with open(pickleDirectory, "rb") as f:
+# Grab and load the pickles
+with open(moviePicke, "rb") as f:
     movieEncoder = pickle.load(f)
 
-# get the indexes from the encoder
+with open(genrePickle, "rb") as f:
+    genreLE = pickle.load(f)
+
+movies["genreList"] = movies.genres.str.split("|")
+
+# Turn saved binarizer into a one hot matrix
+genreMatrix = genreLE.transform(movies["genreList"])
+
+# get the movieIDs from the encoder 
+# (Pretty much the models version  
+# of the movies it understands)
 classes = movieEncoder.classes_    
+
+#  Lookup table to find the row where the movie is when given the movie ID
+movieIdToRow = {movieID: i for i, movieID in enumerate(movieDF.movieId.values)}
+
+#Find the row where the movie appears 
+rowIndices = [movieIdToRow[movieID] for movieID in classes]
+alignedGenres = genreMatrix[rowIndices, :]
+
+# Makes sure the index in the genre matrix aligns 
+# with the embeddings. 
+# shape: [M (# of movies in model), G (# of genres)]
+genreTensor = torch.from_numpy(alignedGenres).float()
+
+#Turn the index into the corresponding movie
 indexToMovie = {i: classes[i] for i in range(len(classes))}
 
-gpuFound = torch.device("cuda" if torch.cuda.is_available() else "cpu") # check if GPU is available
-model = MovieRecModel(numMovies=3650, numUsers = 610, numGenres = 20, HLSize=64, embeddingSize=32, dropout=0.5).to(gpuFound) # Load it to GPU or CPU
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # check if GPU is available
+model = MovieRecModel(numMovies=3650, numUsers = 610, numGenres = 20, HLSize=64, userMovieEmbedSize=32, genreEmbedSize=8).to(device) # Load it to GPU or CPU
 
 # Load trained model
-model.load_state_dict(torch.load(trainedModel, map_location=gpuFound))
+model.load_state_dict(torch.load(trainedModel, map_location=device))
 model.eval()
 
 movieEmbedds = model.movieEmbedding.weight.data.cpu()
@@ -54,9 +81,38 @@ def recommendationSystemTest(movieTitle, movieYear, k=5):
         raise KeyError(f"Movie ID {movieTitle} is not in the pickle encoder")
     
     # It is confirmed to exist, now find similar movies!
-    queryVector = movieEmbedds[index].unsqueeze(0)
-    calcSimilarity = F.cosine_similarity(queryVector, movieEmbedds)
-    # calcSimilarity[index] = -1.0 # Don't recommend the same movie
+    queryVector = movieEmbedds[index].unsqueeze(0).to(device)
+    calcSimilarity = F.cosine_similarity(queryVector, movieEmbedds.to(device))
+
+    # Because the similarity is between 0 and 1, -1 makes it so
+    # it cannot appear
+    calcSimilarity[index] = -1.0 # Don't recommend the same movie.
+
+    # Grab the one hot genre vector corresponding to
+    # corresponding to the chosen movie 
+    # Shape = [genre]
+    genreQuery = genreTensor[index]
+
+    # Find out how many movies have the same genres as the chosen movie.
+    # 1 * 1 = 1 -> genre exists
+    # 1 * 0 = 0 and 0 * 1 = 0 -> genre does not exist
+    overlappingGenres = (genreTensor * genreQuery).sum(dim=1)
+
+    # Build mask that exists if a movie is found that has
+    # the same genres as the chosen movie
+    sharedMasking = overlappingGenres > 0
+
+    # Dpmt recp,,emd the movie to itself
+    sharedMasking[index] = False
+
+    # Filter out movies that do not share the genres if the
+    # chosen movie
+
+    # ~sharedMasking -> element wise logical NOT,
+    # so selects where ~sharedMasking is true
+    # -1.0 means do not recommend those. 
+    calcSimilarity[~sharedMasking] = -1.0
+
     topKValues, topKIndexes = torch.topk(calcSimilarity, k)
 
     # We found the simular movies
