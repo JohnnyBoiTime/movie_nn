@@ -1,6 +1,8 @@
 import axios from 'axios';
 
 // Abstract the env variable yay
-export default axios.create({
+export const nextRoute = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_ROUTE,
 });
+
+export default nextRoute

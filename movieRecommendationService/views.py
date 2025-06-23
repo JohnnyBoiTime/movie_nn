@@ -12,7 +12,7 @@ class RecommendationView(APIView):
     def get(self, request):
         movieTitle = request.query_params.get('title')
         movieYear = request.query_params.get('year')
-        k = int(request.query_params.get('k', 5))
+        k = int(request.query_params.get('k', 1))
         recommendation = recommendationSystemTest(movieTitle, movieYear, k)
         # Include id so we can render in next js using .map
         data = [

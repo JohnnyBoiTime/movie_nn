@@ -66,8 +66,9 @@ model.eval()
 movieEmbedds = model.movieEmbedding.weight.data.cpu()
 movieEmbedds = F.normalize(movieEmbedds, dim=1)
 
-# Test the model
-def recommendationSystemTest(movieTitle, movieYear, k=5):
+# Test the model. (0.5-0.7 is a great range and indicates
+# good similarity)
+def recommendationSystemTest(movieTitle, movieYear, k=1):
     query = movieTitle + ' (' + movieYear + ')'
 
     # Make sure movie title is valid!
@@ -113,6 +114,7 @@ def recommendationSystemTest(movieTitle, movieYear, k=5):
     # -1.0 means do not recommend those. 
     calcSimilarity[~sharedMasking] = -1.0
 
+    # Get the top k movies
     topKValues, topKIndexes = torch.topk(calcSimilarity, k)
 
     # We found the simular movies
