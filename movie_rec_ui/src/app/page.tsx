@@ -8,6 +8,7 @@ import nextRoute from "./apiRoutes/nextAPI";
 interface Movie {
   id: number,
   movie: string,
+  description: string,
   similarityScore: number
 };
 
@@ -16,32 +17,39 @@ export default function Home() {
   // Store results and let user know if loading or not
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<Movie[] | null>(null);
-  const [description, setDescription] = useState<string | null>(null);
 
   const handleQuery = async ({title, year, k}: Movies) => {
     setLoading(true)
     setResults(null)
+    const movieArray: Movie[] = [];
 
     // Send info from the form to the api endpoint
     try {
-      const nnResponse = await djangoRoute.get("/movieRecommendationService/",
-        {
-          params: {title, year, k}
-        }
-      );  
-      console.log(nnResponse.data)
-      setResults(nnResponse.data) // Store to show user
-      const movieTitle = nnResponse.data[0].movie.split(" (")[0]; // Get title
-      const movieYear = nnResponse.data[0].movie.split(" (")[1].split(")")[0]; // Get year
+       for (let i = 0; i < k; i++) {
+          const nnResponse = await djangoRoute.get("/movieRecommendationService/",
+            {
+              params: {title, year, k}
+            }
+          );  
+        
+          const movieTitle = nnResponse.data[i].movie.split(" (")[0]; // Get title
+          const movieYear = nnResponse.data[i].movie.split(" (")[1].split(")")[0]; // Get year    
+          // Now get information about the recommended movies via TMDB database
+          const { data } = await nextRoute.get("/search/movie",
+            {
+              params: {query: movieTitle, year: movieYear}
+            }
+          );    
 
-      // Now get information about the recommended movies via TMDB database
-      const { data } = await nextRoute.get("/search/movie",
-        {
-          params: {query: movieTitle, year: movieYear}
-        }
-      ); 
-      console.log(data.overview)
-      setDescription(data.overview)
+          movieArray[i] = {
+            id: i,
+            movie: movieTitle,
+            description: data.overview,
+            similarityScore: nnResponse.data[i].similarityScore
+          }
+      } 
+
+      setResults(movieArray)
     } catch(error) {
       console.error("Could not do it: ", error);
     } finally {
@@ -61,16 +69,18 @@ export default function Home() {
           {/* List out their recommendations */}
           {results.map((r) => (
             <li key={r.id}>
-              <strong>Movie: {r.movie}, similarity: {r.similarityScore} </strong>
+              <strong>Movie: {r.movie}</strong>
+              <div>
+                <strong>Description:</strong>
+                <div>
+                  <strong>{r.description}  </strong>
+                </div>
+              </div>
+              <br />
             </li>
           ))}
         </ul>
       )}
-      {description && 
-        <div>
-          <strong>{description}</strong>
-        </div>
-      }
     </div>
   );
 }
