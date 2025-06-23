@@ -59,7 +59,7 @@ export default function SubmissionForm({
             </div>
             <div>
                 <label>
-                    k value: &nbsp;
+                    Amount of movies to recommend: &nbsp;
                     <input 
                         name="title"
                         type="number"
