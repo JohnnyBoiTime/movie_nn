@@ -9,6 +9,7 @@ import nextRoute from "./apiRoutes/nextAPI";
 interface Movie {
   id: number,
   movie: string,
+  yearOfRelease: string,
   description: string,
   poster: string,
   similarityScore: number
@@ -23,8 +24,12 @@ export default function Home() {
   const handleQuery = async ({title, year, k}: Movies) => {
     setLoading(true)
     setResults(null)
+
+    // Image url info
     const imageURL = 'https://image.tmdb.org/t/p/';
     const imageSize = 'w200';
+
+    // Store all the movies to set to results later to show user
     const movieArray: Movie[] = [];
 
     // Send info from the form to the api endpoint
@@ -48,6 +53,7 @@ export default function Home() {
           movieArray[i] = {
             id: i,
             movie: movieTitle,
+            yearOfRelease: data.release_date.split("-")[0],
             description: data.overview,
             poster: `${imageURL}${imageSize}${data.poster_path}`,
             similarityScore: nnResponse.data[i].similarityScore
@@ -74,7 +80,7 @@ export default function Home() {
           {/* List out their recommendations */}
           {results.map((r) => (
             <li key={r.id}>
-              <strong>Movie: {r.movie} ({r.similarityScore})</strong>
+              <strong>Movie: {r.movie} ({r.yearOfRelease}) {r.similarityScore}</strong>
               <Image src={r.poster} width={200} height={200} alt="Movie" />
               <div>
                 <strong>Description:</strong>
