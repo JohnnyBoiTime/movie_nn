@@ -1,5 +1,6 @@
 'use client'
 import { useState } from "react";
+import Image from "next/image";
 import SubmissionForm, {Movies} from "./components/submitForm";
 import djangoRoute from "./apiRoutes/djangoAPI";
 import nextRoute from "./apiRoutes/nextAPI";
@@ -9,6 +10,7 @@ interface Movie {
   id: number,
   movie: string,
   description: string,
+  poster: string,
   similarityScore: number
 };
 
@@ -21,6 +23,8 @@ export default function Home() {
   const handleQuery = async ({title, year, k}: Movies) => {
     setLoading(true)
     setResults(null)
+    const imageURL = 'https://image.tmdb.org/t/p/';
+    const imageSize = 'w200';
     const movieArray: Movie[] = [];
 
     // Send info from the form to the api endpoint
@@ -45,6 +49,7 @@ export default function Home() {
             id: i,
             movie: movieTitle,
             description: data.overview,
+            poster: `${imageURL}${imageSize}${data.poster_path}`,
             similarityScore: nnResponse.data[i].similarityScore
           }
       } 
@@ -69,7 +74,8 @@ export default function Home() {
           {/* List out their recommendations */}
           {results.map((r) => (
             <li key={r.id}>
-              <strong>Movie: {r.movie}</strong>
+              <strong>Movie: {r.movie} ({r.similarityScore})</strong>
+              <Image src={r.poster} width={200} height={200} alt="Movie" />
               <div>
                 <strong>Description:</strong>
                 <div>
