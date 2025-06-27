@@ -4,10 +4,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .movieRecModel import recommendationSystemTest
+from django.core.cache import cache
 
 # Create your views here.
 
-# API respones from the model
+
+
+# API respones from the model and TMDB
 class RecommendationView(APIView):
     def get(self, request):
         movieTitle = request.query_params.get('title')

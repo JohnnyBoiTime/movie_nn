@@ -103,7 +103,7 @@ def recommendationSystemTest(movieTitle, movieYear, k=5):
     # the same genres as the chosen movie
     sharedMasking = overlappingGenres > 0
 
-    # Dpmt recp,,emd the movie to itself
+    # Don't recommend the movie to itself
     sharedMasking[index] = False
 
     # Filter out movies that do not share the genres if the
@@ -117,7 +117,7 @@ def recommendationSystemTest(movieTitle, movieYear, k=5):
     # Get the top k movies
     topKValues, topKIndexes = torch.topk(calcSimilarity, k)
 
-    # We found the simular movies
+    # We found the similar movies
     return [( movieIdToTitle.get(indexToMovie[index.item()]), topKValues[j].item())
         for j, index in enumerate(topKIndexes)]
 
