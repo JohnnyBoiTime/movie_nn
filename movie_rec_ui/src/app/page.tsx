@@ -50,6 +50,7 @@ export default function Home() {
             }
           );    
 
+          // Construction of the list of recommendations for the user
           movieArray[i] = {
             id: i,
             movie: movieTitle,

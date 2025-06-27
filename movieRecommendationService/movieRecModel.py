@@ -68,7 +68,7 @@ movieEmbedds = F.normalize(movieEmbedds, dim=1)
 
 # Test the model. (0.5-0.7 is a great range and indicates
 # good similarity)
-def recommendationSystemTest(movieTitle, movieYear, k=1):
+def recommendationSystemTest(movieTitle, movieYear, k=5):
     query = movieTitle + ' (' + movieYear + ')'
 
     # Make sure movie title is valid!
