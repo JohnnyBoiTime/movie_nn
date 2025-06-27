@@ -25,6 +25,22 @@ export default function Home() {
     setLoading(true)
     setResults(null)
 
+
+    try {
+
+     const response = await djangoRoute.get<Movie[]>("/movieRecommendationService/",
+            {
+              params: {title, year, k}
+            }
+          );  
+
+          const movies = response.data;
+
+          console.log(movies[0].poster)
+
+      setResults(movies)
+
+    /*
     // Image url info
     const imageURL = 'https://image.tmdb.org/t/p/';
     const imageSize = 'w200';
@@ -61,7 +77,8 @@ export default function Home() {
           }
       } 
 
-      setResults(movieArray)
+      */
+
     } catch(error) {
       console.error("Could not do it: ", error);
     } finally {
