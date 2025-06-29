@@ -81,19 +81,25 @@ class RecommendationView(APIView):
                 # Because of what the JSON object that is recieved 
                 # looks like, we just get the top result, which
                 # is what we are looking for
-                movieInfo = tmdbData.get("results", [{}])[0]
+                movieInfo = tmdbData
 
             # The information exists in the cache!    
             else :
                 print(f"[Cache Hit] {cacheKey} (lookup took {elapsed_ms_time:.2f} ms)")
+
+            moviePosterPath = movieInfo.get('poster_path')
+
+            moviePoster = f"https://image.tmdb.org/t/p/w200{moviePosterPath}"
+            movieDescription = movieInfo.get("overview", "")
+    
 
             # Start creating the json object
             data.append({
                 "id": index,
                 "movie": title,
                 "yearOfRelease": year,
-                "poster": f"https://image.tmdb.org/t/p/w200{movieInfo.get('poster_path')}",
-                "description": movieInfo.get("overview", ""),
+                "poster": moviePoster,
+                "description": movieDescription,
                 "similarityScore": score,
             })
 
