@@ -73,6 +73,7 @@ class RecommendationView(APIView):
                 tmdbResponse.raise_for_status()
                 tmdbData = tmdbResponse.json()
 
+                # Only need to save the first result
                 tmdbData = tmdbData.get("results", [{}])[0]
 
                 # Save the information under that key for an hour
@@ -87,13 +88,13 @@ class RecommendationView(APIView):
             else :
                 print(f"[Cache Hit] {cacheKey} (lookup took {elapsed_ms_time:.2f} ms)")
 
+            # Fill in all information for the JSON
             moviePosterPath = movieInfo.get('poster_path')
-
             moviePoster = f"https://image.tmdb.org/t/p/w200{moviePosterPath}"
             movieDescription = movieInfo.get("overview", "")
     
 
-            # Start creating the json object
+            # Send next.js the information for the movie
             data.append({
                 "id": index,
                 "movie": title,
