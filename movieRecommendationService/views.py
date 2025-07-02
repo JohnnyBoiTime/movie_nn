@@ -49,13 +49,17 @@ class RecommendationView(APIView):
             # to reduce request strain (hit)
             cacheKey = f"tmdb:search:{title}:{year}"
 
+            # Log time to get key to make sure cache is working
             timeToGetKey = time.perf_counter()
 
+            # Check to see if the movie already exists
+            # in the cache
             movieInfo = cache.get(cacheKey)
 
             elapsed_ms_time = (time.perf_counter() - timeToGetKey) * 1000
 
-            # It does not exist in the cache (miss)
+            # It does not exist in the cache (miss), so add
+            # it do the cache
             if movieInfo is None:
 
                 print(f"[Cache miss] {cacheKey} (lookup took {elapsed_ms_time:.2f} ms)")
@@ -84,7 +88,8 @@ class RecommendationView(APIView):
                 # is what we are looking for
                 movieInfo = tmdbData
 
-            # The information exists in the cache!    
+            # The information exists in the cache!
+            # Log time omg
             else :
                 print(f"[Cache Hit] {cacheKey} (lookup took {elapsed_ms_time:.2f} ms)")
 

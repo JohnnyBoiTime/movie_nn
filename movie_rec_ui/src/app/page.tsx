@@ -3,7 +3,9 @@ import { useState } from "react";
 import Image from "next/image";
 import SubmissionForm, {Movies} from "./components/submitForm";
 import djangoRoute from "./apiRoutes/djangoAPI";
-import nextRoute from "./apiRoutes/nextAPI";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import {authOptions} from "./api/auth/[...nextauth]/route"
 
 // Format of the json response
 interface Movie {
@@ -15,7 +17,12 @@ interface Movie {
   similarityScore: number
 };
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return redirect("./login")
+  }
 
   // Store results and let user know if loading or not
   const [loading, setLoading] = useState(false);
