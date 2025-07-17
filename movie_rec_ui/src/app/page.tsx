@@ -6,6 +6,7 @@ import djangoRoute from "./apiRoutes/djangoAPI";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import {authOptions} from "./api/auth/[...nextauth]/route"
+import csrfRoute from "./apiRoutes/csrfAPI";
 
 // Format of the json response
 interface Movie {
@@ -31,7 +32,6 @@ export default async function Home() {
   const handleQuery = async ({title, year, k}: Movies) => {
     setLoading(true)
     setResults(null)
-
 
     try {
 

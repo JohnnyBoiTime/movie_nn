@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
 from dotenv import load_dotenv
 import os
 
@@ -35,8 +36,10 @@ TMDB_SEARCH_URL = 'https://api.themoviedb.org/3/search/movie'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# CSRF_COOKIE_SECURE    = False    
+# SESSION_COOKIE_SECURE = False
 
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -64,11 +67,17 @@ MIDDLEWARE = [
     
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+]
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",     
     "http://127.0.0.1:3000",
     "https://movierecommendation-9vh1rf0o8-philip-rickeys-projects.vercel.app",
 ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'movieRecproj.urls'
 
@@ -94,10 +103,11 @@ WSGI_APPLICATION = 'movieRecproj.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.parse(
+        os.environ["SUPABASE_DATABASE_URL"],
+        conn_max_age=600, # Keep connection open for 10 mins
+        ssl_require=True # require encryption
+    )
 }
 
 # redis configuration

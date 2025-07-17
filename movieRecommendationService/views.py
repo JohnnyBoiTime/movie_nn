@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt, csrf_protect
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .movieRecModel import recommendationSystemTest
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from django.core.cache import cache
+import json
 import time
 import requests
 
@@ -25,7 +29,7 @@ import requests
 """
   const imageURL = 'https://image.tmdb.org/t/p/';
     const imageSize = 'w200';
-    """
+"""
 
 # API respones from the model and TMDB
 class RecommendationView(APIView):
@@ -128,4 +132,73 @@ class RecommendationView(APIView):
                             json_dumps_params={'indent': 2}
                             )
     
+######################################
+# CSRF AND USER AUTHENTICATION VIEWS #
+######################################
+
+# Set the csrf cookie
+@ensure_csrf_cookie
+def csrfTokenView(request):
+    print("CSRF TOKEN!!!!")
+    return JsonResponse({'detail': 'CSRF cookie set'})
+
+# Validates login
+def userLogin(request):
+    if request.method != "POST":
+        return JsonResponse({"detail": "POST Method not allowed"}, status=405)
+    
+    data = json.loads(request.body)
+    user = authenticate(
+        request,
+        username = data.get("username"),
+        password = data.get("password"),
+    )
+
+    if user is None:
+        return JsonResponse({"detail": "Invalid credentials"}, status=401)
+    
+    login(request, user)
+    return JsonResponse({"detail": "Login success!!!"})
+
+
+# Registers the user
+@csrf_protect
+def userRegister(request):
+    if request.method != "POST":
+        return JsonResponse({"detail": "POST method only"}, status=405)
+
+    data = json.loads(request.body)
+    username = data.get("username")
+    email = data.get("email")
+    password = data.get("password")
+
+    if not username or not email or not password:
+        return JsonResponse({"detail": "Username, email, and password are required"}, status=400)
+    if User.objects.filter(username=username).exists():
+        return JsonResponse({"detail": "Username already in use"}, status=400)
+    
+    User.objects.create_user(
+        username = username,
+        email = email,
+        password=password # Already hashed by django here!
+    )
+    return JsonResponse({"detail": "Successfully registered!"}, status=201)
+
+
+
+# If logged in, returns the users information.
+# This is to make sure the sessionId in the cookie
+# matches the server session
+def userLoggedIn(request):
+
+    # suspicious user
+    if not request.user.is_authenticated:
+        return JsonResponse({"detail": "User is not authenticated"}, status = 401)
+    
+    # Return user info
+    return JsonResponse({
+        "id": request.user.id,
+        "username": request.user.username,
+        "email": request.user.email,
+    })
 
