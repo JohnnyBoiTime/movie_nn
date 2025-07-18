@@ -1,41 +1,39 @@
 'use client';
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {signIn} from "next-auth/react";
-import {loginUser, User} from "../services/user"
+import {registerUser, User} from "../services/user"
 
 export default function LoginPage() {
     const [form, setForm] = useState({
+        email: "",
         username: "",
         password: "",
     });
     const router = useRouter();
 
-    // Registration and login
-    async function loginForm(e: React.FormEvent) {
+    // Registration proccess
+    async function registrationForm(e: React.FormEvent) {
 
         console.log("Submitting:", form)
 
         e.preventDefault();
 
-        // Login process
-        const loginTheUser = await loginUser({
-            username: form.username,
-            password: form.password,
-        });
-        if (loginTheUser.status === 200) {
-            console.log("SUCCESSFULLY LOGGED IN!");
-            router.push("/recommendationPage");
+        const registerTheUser = await registerUser(form);
+        if (registerTheUser.status !== 201) {
+            console.error("Could not register user: ", registerTheUser.data);
         } else {
-            console.error("Could not log in: ", loginTheUser.data);
+            console.log("Successfully registered!");
+            router.push("./login");
         }
     }
 
     return (
         <div>
             <div>
-                 {/* Very basic login form */}
-                <form onSubmit={loginForm} className="flex flex-col space-y-4">
+                {/* Very basic registration form */}
+                <form onSubmit={registrationForm} className="flex flex-col space-y-4">
                     <input 
                         type="text"
                         placeholder="Username"
@@ -45,29 +43,22 @@ export default function LoginPage() {
                     />
                     <input 
                         type="text"
+                        placeholder="Email"
+                        value={form.email}
+                        onChange={e => setForm({...form, email: e.target.value})}
+                        required
+                    />
+                    <input 
+                        type="text"
                         placeholder="Password"
                         value={form.password}
                         onChange={e => setForm({...form, password: e.target.value})}
                         required
                     />
-
                     <button type="submit">
-                        Login 
+                        Register
                     </button>
                 </form>
-            </div>
-            <div>
-                <button onClick={() => signIn("google", {callbackUrl: "/"})} >
-                    Sign in using google
-                </button>
-            </div>
-            <div>
-                --OR--
-            </div>
-            <div>
-                <button onClick={() => router.push("/register")}>
-                    Register
-                </button>
             </div>
         </div>
     );
