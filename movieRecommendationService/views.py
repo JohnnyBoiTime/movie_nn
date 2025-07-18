@@ -148,6 +148,8 @@ def userLogin(request):
         return JsonResponse({"detail": "POST Method not allowed"}, status=405)
     
     data = json.loads(request.body)
+
+    print(data)
     user = authenticate(
         request,
         username = data.get("username"),

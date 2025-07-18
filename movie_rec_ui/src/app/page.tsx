@@ -6,6 +6,7 @@ export default function Home() {
  
   const router = useRouter();
 
+  // Have to wait until the component mounts to redirect
   useEffect(() => {
     router.push("/login");
   }, [router])
