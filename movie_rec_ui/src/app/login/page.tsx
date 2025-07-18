@@ -2,7 +2,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {signIn} from "next-auth/react";
-import {loginUser, User} from "../services/user"
+
+interface Login {
+    username: string;
+    password: string;
+}
 
 export default function LoginPage() {
     const [form, setForm] = useState({
@@ -18,17 +22,25 @@ export default function LoginPage() {
 
         e.preventDefault();
 
-        // Login process
-        const loginTheUser = await loginUser({
-            username: form.username,
-            password: form.password,
-        });
-        if (loginTheUser.status === 200) {
-            console.log("SUCCESSFULLY LOGGED IN!");
-            router.push("/recommendationPage");
-        } else {
-            console.error("Could not log in: ", loginTheUser.data);
-        }
+        // user exists in the database,
+        // now log them in using next-auth and
+        // create a session!
+             const response = await signIn("credentials", {
+                redirect: false,
+                username: form.username,
+                password: form.password,
+            });
+
+            console.log("Response from login: ", response);
+
+            // Session created and user logged in!
+            if (response?.ok){
+                console.log("SUCCESSFULLY LOGGED IN!");
+                router.replace("/");
+            }
+            else {
+                console.error("Could not create session: ", response);
+            }
     }
 
     return (

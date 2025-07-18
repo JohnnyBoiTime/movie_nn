@@ -142,10 +142,10 @@ def csrfTokenView(request):
     print("CSRF TOKEN!!!!")
     return JsonResponse({'detail': 'CSRF cookie set'})
 
-# Validates login
+@csrf_exempt
 def userLogin(request):
     if request.method != "POST":
-        return JsonResponse({"detail": "POST Method not allowed"}, status=405)
+        return JsonResponse({"detail": "POST Method only "}, status=405)
     
     data = json.loads(request.body)
 
@@ -160,11 +160,12 @@ def userLogin(request):
         return JsonResponse({"detail": "Invalid credentials"}, status=401)
     
     login(request, user)
+
+    print(f"User {user.username} Is logged in!")
     return JsonResponse({"detail": "Login success!!!"})
 
 
 # Registers the user
-@csrf_protect
 def userRegister(request):
     if request.method != "POST":
         return JsonResponse({"detail": "POST method only"}, status=405)

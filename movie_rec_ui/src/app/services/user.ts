@@ -1,3 +1,4 @@
+import djangoRoute from "../apiRoutes/djangoAPI";
 import csrfRoute from "../apiRoutes/csrfAPI";
 
 export interface Registration {
@@ -31,16 +32,18 @@ export async function registerUser(data: Registration) {
 
 export async function loginUser(data: Login) {
 
-    const response = await csrfRoute.post('/login/', data);
+    console.log("Inside of loginUser function:", data);
 
-    console.log(response);
+    const response = await djangoRoute.post('/login/', data);
+
+    console.log("Response from the await: ", response);
 
     return response;
 }
 
 export async function fetchLoggedinUser() {
 
-     const response = await csrfRoute.post('/user/');
+     const response = await djangoRoute.post('/user/');
 
     console.log(response);
 

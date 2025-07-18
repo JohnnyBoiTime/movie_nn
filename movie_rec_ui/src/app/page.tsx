@@ -1,16 +1,13 @@
-'use client'
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import {authOptions} from "./api/auth/[...nextauth]/route"
 
-export default function Home() {
- 
-  const router = useRouter();
+export default async function Home() {
+  const session = await getServerSession(authOptions);
 
-  // Have to wait until the component mounts to redirect
-  useEffect(() => {
-    router.push("/login");
-  }, [router])
-
-  return null;
-
+  if (!session) {
+    return redirect("/login");
+  } else {
+    return redirect("/recommendationPage");
+  }
 }
