@@ -2,11 +2,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import SubmissionForm, {Movies} from "../components/submitForm";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 import { getRecommendations } from "../services/neuralNet";
 
-export default function RecommendationPage() {
-
-    // Format of the json response
+// Format of the json response
     interface Movie {
         id: number,
         movie: string,
@@ -16,9 +16,16 @@ export default function RecommendationPage() {
         similarityScore: number
     };
 
+
+export default function RecommendationPage() {
+
   // Store results and let user know if loading or not
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<Movie[] | any>(null);
+
+  const user = useSelector((state: RootState) => state.profile)
+
+
 
   const handleQuery = async ({title, year, k}: Movies) => {
     setLoading(true)
@@ -40,6 +47,9 @@ export default function RecommendationPage() {
     return (
       // Show user the results of their query
       <div>
+        <div>
+          User: {user.username}
+        </div>
         <SubmissionForm onSubmit={handleQuery} loading={loading}/>
 
         {/* Reaching here means their query was a success */}

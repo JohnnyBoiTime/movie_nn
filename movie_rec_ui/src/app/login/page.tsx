@@ -2,6 +2,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {signIn} from "next-auth/react";
+import { useDispatch} from "react-redux";
+import {RootState, AppDispatch } from "../redux/store";
+import {setUsername} from "../redux/slices/profileSlice";
 
 interface Login {
     username: string;
@@ -14,6 +17,8 @@ export default function LoginPage() {
         password: "",
     });
     const router = useRouter();
+
+    const dispatch = useDispatch<AppDispatch>();
 
     // Registration and login
     async function loginForm(e: React.FormEvent) {
@@ -36,6 +41,7 @@ export default function LoginPage() {
             // Session created and user logged in!
             if (response?.ok){
                 console.log("SUCCESSFULLY LOGGED IN!");
+                dispatch(setUsername(form.username));
                 router.replace("/");
             }
             else {

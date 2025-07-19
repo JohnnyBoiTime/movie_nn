@@ -6,10 +6,14 @@ import GoogleProvider from "next-auth/providers/google"
 
 // Configure auth
 export const authOptions = {
+
+    // Custom login page
     pages: {
         signIn: "/login",
     },
     providers: [
+
+        // Basic credentials provider
         CredentialsProvider({
             id: "credentials",
             name: "Credentials",
@@ -21,24 +25,18 @@ export const authOptions = {
 
                 if (credentials) {
 
-                    console.log("Username: ", credentials.username);
-                    console.log("Password: ", credentials.password);
-
                     try {
-
+                    
+                        // Login the user by seeing if it exists in the database
                     const response = await loginUser({
                         username: credentials.username,
                         password: credentials.password,
                     })
 
-                    console.log(response);
-
                 } catch (error) {
                     console.log("Error logging in: ", error);
                 }
-
-
-
+                    // Return user if it exists
                     return {
                         username: credentials.username,
                         password: credentials.password

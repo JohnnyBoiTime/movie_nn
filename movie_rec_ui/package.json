@@ -10,12 +10,14 @@
   },
   "dependencies": {
     "@next/env": "^15.3.4",
+    "@reduxjs/toolkit": "^2.8.2",
     "axios": "^1.10.0",
     "js-cookie": "^3.0.5",
     "next": "15.3.4",
     "next-auth": "^4.24.11",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
