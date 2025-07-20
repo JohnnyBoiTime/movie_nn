@@ -1,5 +1,6 @@
 'use client'
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import SubmissionForm, {Movies} from "../components/submitForm";
 import { useSelector } from "react-redux";
@@ -25,12 +26,13 @@ export default function RecommendationPage() {
 
   const user = useSelector((state: RootState) => state.profile)
 
-
-
+  // Send form results to the model and retrieve 
+  // similar movies
   const handleQuery = async ({title, year, k}: Movies) => {
     setLoading(true)
     setResults(null)
 
+     // call to model
      const response = await getRecommendations(title, year, k);
 
      console.log(response);
@@ -47,9 +49,15 @@ export default function RecommendationPage() {
     return (
       // Show user the results of their query
       <div>
-        <div>
-          User: {user.username}
-        </div>
+          <div>
+            User: {user.username}
+          </div>
+          <div>
+            <button onClick={() => signOut({
+              callbackUrl: "/"
+              })}> Sign Out 
+            </button>
+          </div>
         <SubmissionForm onSubmit={handleQuery} loading={loading}/>
 
         {/* Reaching here means their query was a success */}

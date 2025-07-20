@@ -98,7 +98,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'movieRecproj.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -109,6 +108,8 @@ DATABASES = {
         ssl_require=True # require encryption
     )
 }
+
+
 
 # redis configuration
 CACHES = {

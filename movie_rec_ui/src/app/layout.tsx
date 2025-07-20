@@ -31,7 +31,7 @@ export default function RootLayout({
       >
         { /* Provide the redux store to the application */}
         <StoreProvider>
-        {children}
+            {children}
         </StoreProvider>
       </body>
     </html>
