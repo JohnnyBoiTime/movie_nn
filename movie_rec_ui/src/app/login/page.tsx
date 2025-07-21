@@ -52,40 +52,46 @@ export default function LoginPage() {
     return (
         <div>
             <div>
-                 {/* Very basic login form */}
-                <form onSubmit={loginForm} className="flex flex-col space-y-4">
-                    <input 
-                        type="text"
-                        placeholder="Username"
-                        value={form.username}
-                        onChange={e => setForm({...form, username: e.target.value})}
-                        required
-                    />
-                    <input 
-                        type="text"
-                        placeholder="Password"
-                        value={form.password}
-                        onChange={e => setForm({...form, password: e.target.value})}
-                        required
-                    />
+                <h1 className="text-center text-4xl font-extrabol mb-8">Welcome to movieNN!</h1>
+            </div>
+            <div className="h-screen w-full flex items-center justify-center px-4">
+                <div className="w-full max-w-sm  p-8 rounded-2xl shadow-lg border">
+                    <h1 className="text-center">Log in</h1>
+                     {/* Very basic login form */}
+                    <form onSubmit={loginForm} className="flex flex-col space-y-4">
+                        <input 
+                            type="text"
+                            placeholder="Username"
+                            value={form.username}
+                            onChange={e => setForm({...form, username: e.target.value})}
+                            required
+                        />
+                        <input 
+                            type="text"
+                            placeholder="Password"
+                            value={form.password}
+                            onChange={e => setForm({...form, password: e.target.value})}
+                            required
+                        />
 
-                    <button type="submit">
-                        Login 
-                    </button>
-                </form>
-            </div>
-            <div>
-                <button onClick={() => signIn("google", {callbackUrl: "/"})} >
-                    Sign in using google
-                </button>
-            </div>
-            <div>
-                --OR--
-            </div>
-            <div>
-                <button onClick={() => router.push("/register")}>
-                    Register
-                </button>
+                        <button type="submit">
+                            Login 
+                        </button>
+                    </form>
+                    <div className="text-center">
+                        <button onClick={() => signIn("google", {callbackUrl: "/"})} >
+                            Sign in using google
+                        </button>
+                    </div>
+                    <div className="text-center">
+                        --OR--
+                    </div>
+                    <div className="text-center">
+                        <button onClick={() => router.push("/register")}>
+                            Register
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
