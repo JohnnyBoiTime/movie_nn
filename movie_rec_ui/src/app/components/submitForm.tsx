@@ -34,9 +34,10 @@ export default function SubmissionForm({
     return (
         <form onSubmit={handleSubmission} style={{marginBottom: 20}}>
             <div>
-                <label>
-                    Title: &nbsp;
+                <label className="border p-1 px-4">
+                    Movie Title: &nbsp;
                     <input 
+                        className="focus:outline-none "
                         name="title"
                         type="text"
                         value={title}
@@ -45,10 +46,14 @@ export default function SubmissionForm({
                     />
                 </label>
             </div>
+            <div className="p-1">
+            </div>
             <div>
-                <label>
-                    Year: &nbsp;
+                <label className="border p-1 px-4">
+                    Year of Release: &nbsp;
                     <input 
+                        className="focus:outline-none w-11"
+                        maxLength={4}
                         name="title"
                         type="text"
                         value={year}
@@ -59,10 +64,13 @@ export default function SubmissionForm({
             </div>
             <div>
                 <label>
-                    Amount of movies to recommend: &nbsp;
+                    Amount of movies to recommend: (1-10) &nbsp;
                     <input 
+                        className="border w-10 justify-center content-center text-center"
                         name="title"
                         type="number"
+                        min={1}
+                        max={10}
                         value={k}
                         onChange={(e) => setK(Number(e.target.value))}
                         required

@@ -47,10 +47,13 @@ export const authOptions = {
             }
         }),
 
+        // Maybe implement this some other time
+        /*
         GoogleProvider({
             clientId: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET_KEY
         }),
+        */
     ],
     secret: process.env.NEXTAUTH_SECRET_KEY,
 };

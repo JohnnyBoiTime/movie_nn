@@ -73,20 +73,21 @@ export default function LoginPage() {
                             onChange={e => setForm({...form, password: e.target.value})}
                             required
                         />
-
-                        <button type="submit">
-                            Login 
-                        </button>
+                            <button className="border" type="submit">
+                                Login 
+                            </button>
                     </form>
-                    <div className="text-center">
+                    <div className="text-center border">
+                        {/** 
                         <button onClick={() => signIn("google", {callbackUrl: "/"})} >
                             Sign in using google
                         </button>
+                        */}
                     </div>
                     <div className="text-center">
                         --OR--
                     </div>
-                    <div className="text-center">
+                    <div className="border text-center">
                         <button onClick={() => router.push("/register")}>
                             Register
                         </button>
