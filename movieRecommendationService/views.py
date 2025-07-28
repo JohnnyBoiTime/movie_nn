@@ -12,25 +12,6 @@ import json
 import time
 import requests
 
-# API key
-
-"""
-  movieArray[i] = {
-            id: i,
-            movie: movieTitle,
-            yearOfRelease: data.release_date.split("-")[0],
-            description: data.overview,
-            poster: `${imageURL}${imageSize}${data.poster_path}`,
-            similarityScore: nnResponse.data[i].similarityScore
-          }
-          
-"""
-
-"""
-  const imageURL = 'https://image.tmdb.org/t/p/';
-    const imageSize = 'w200';
-"""
-
 # API respones from the model and TMDB
 class RecommendationView(APIView):
     def get(self, request):
@@ -150,6 +131,8 @@ def userLogin(request):
     data = json.loads(request.body)
 
     print(data)
+
+    # Authenticate the users credentials in the database
     user = authenticate(
         request,
         username = data.get("username"),
@@ -170,6 +153,7 @@ def userRegister(request):
     if request.method != "POST":
         return JsonResponse({"detail": "POST method only"}, status=405)
 
+    # Process incoming json response
     data = json.loads(request.body)
     username = data.get("username")
     email = data.get("email")
@@ -180,6 +164,7 @@ def userRegister(request):
     if User.objects.filter(username=username).exists():
         return JsonResponse({"detail": "Username already in use"}, status=400)
     
+    # Put user into database
     User.objects.create_user(
         username = username,
         email = email,

@@ -34,12 +34,19 @@ TMDB_SEARCH_URL = 'https://api.themoviedb.org/3/search/movie'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-# CSRF_COOKIE_SECURE    = False    
-# SESSION_COOKIE_SECURE = False
+# Security stuff
+# SECURE_SSL_REDIRECT      = True 
+# SESSION_COOKIE_SECURE    = True
+# CSRF_COOKIE_SECURE       = True
+# SECURE_HSTS_SECONDS      = 3600
+# SECURE_BROWSER_XSS_FILTER= True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1"
+]
 
 # Application definition
 
@@ -64,16 +71,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
+    "https://movierecommendation-9vh1rf0o8-philip-rickeys-projects.vercel.app",
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",     
-    "http://127.0.0.1:3000",
     "https://movierecommendation-9vh1rf0o8-philip-rickeys-projects.vercel.app",
 ]
 
@@ -109,21 +116,32 @@ DATABASES = {
     )
 }
 
+# COMMADNS TO MAKE A REDIS DOCKER CONTAINER:
 
+# 1. docker run --name movie-redis -p 6379:6379 -d redis:latest 
+# 2. docker exec -it movie-redis redis-cli -n 1 FLUSHDB   
+
+# Other notes:
+
+# Combine both 
 
 # redis configuration
+
+""" No cache
 CACHES = {
 
     # cache.get():
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://movie-redis:6379/1", # NEEDS TO POINT TO REDIS' DOCKER CONTAINER LOCALLY
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
         "TIMEOUT": 3600,
     }
 }
+
+"""
 
 
 # Password validation

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RecommendationView, csrfTokenView, userLogin, userRegister, userLoggedIn
+from .views import RecommendationView, csrfTokenView, userLogin, userRegister, userLoggedIn, health
 
 urlpatterns = [
     path('movieRecommendationService/', RecommendationView.as_view(), name='movieRecommendationService'),

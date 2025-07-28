@@ -1,0 +1,13 @@
+# No need to put the front end in
+movie_rec_ui
+testModel.py
+trainModel.py
+recommendation.py
+data
+trainingOutputs.txt
+datasets.py
+scripts
+venv
+.gitignore
+db.sqlite3
+__pycache__

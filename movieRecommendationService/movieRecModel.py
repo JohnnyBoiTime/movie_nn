@@ -56,7 +56,7 @@ genreTensor = torch.from_numpy(alignedGenres).float()
 #Turn the index into the corresponding movie
 indexToMovie = {i: classes[i] for i in range(len(classes))}
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # check if GPU is available
+device = torch.device("cpu")#"cuda" if torch.cuda.is_available() else "cpu") # check if GPU is available
 model = MovieRecModel(numMovies=3650, numUsers = 610, numGenres = 20, HLSize=64, userMovieEmbedSize=32, genreEmbedSize=8).to(device) # Load it to GPU or CPU
 
 # Load trained model
