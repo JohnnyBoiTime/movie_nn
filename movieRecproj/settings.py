@@ -34,7 +34,7 @@ TMDB_SEARCH_URL = 'https://api.themoviedb.org/3/search/movie'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # Security stuff
 # SECURE_SSL_REDIRECT      = True 
@@ -116,32 +116,21 @@ DATABASES = {
     )
 }
 
-# COMMADNS TO MAKE A REDIS DOCKER CONTAINER:
-
-# 1. docker run --name movie-redis -p 6379:6379 -d redis:latest 
-# 2. docker exec -it movie-redis redis-cli -n 1 FLUSHDB   
-
-# Other notes:
-
-# Combine both 
-
 # redis configuration
 
-""" No cache
 CACHES = {
-
-    # cache.get():
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://movie-redis:6379/1", # NEEDS TO POINT TO REDIS' DOCKER CONTAINER LOCALLY
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
-        "TIMEOUT": 3600,
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique_name_wow', 
+        'TIMEOUT': 300,                  
+        'OPTIONS': {
+            'MAX_ENTRIES': 100,       
+            'CULL_FREQUENCY': 3,       
+        }
     }
 }
 
-"""
+RATELIMIT_USE_CACHE = 'default'
 
 
 # Password validation

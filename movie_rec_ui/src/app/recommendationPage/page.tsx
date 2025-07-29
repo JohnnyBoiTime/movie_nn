@@ -1,6 +1,7 @@
-'use client'
-import { useState } from "react";
+'use client';
+import { useEffect, useState } from "react";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import SubmissionForm, {Movies} from "../components/submitForm";
 import { useSelector } from "react-redux";
@@ -20,9 +21,14 @@ import { getRecommendations } from "../services/neuralNet";
 
 export default function RecommendationPage() {
 
+  const router = useRouter();
+
   // Store results and let user know if loading or not
   const [loading, setLoading] = useState(false);
+  const [locked, setLocked] = useState(true);
+  const [tooManyRequests, setTooManyRequests] = useState(false);
   const [results, setResults] = useState<Movie[] | any>(null);
+  
 
   const user = useSelector((state: RootState) => state.profile)
 
@@ -32,19 +38,29 @@ export default function RecommendationPage() {
     setLoading(true)
     setResults(null)
 
-     // call to model
-     const response = await getRecommendations(title, year, k);
+     
+     const response: Movie[] | unknown = await getRecommendations(title, year, k);
 
      console.log(response);
 
-     if (response) {
+     if (response != 429) {
         setResults(response);
         setLoading(false);
-     } else {
-        console.error("No recommendations found.");
+     }  
+
+     // Too many requests
+     else if (response == 429) {
+      setLoading(true)
+      setResults(null);
+      router.push("/tooManyRequests");
+     }
+
+     else {
+        setResults(null)
+        setLoading(true)
+        router.push("/unkownError");
      }
   }
-
 
     return (
       // Show user the results of their query
@@ -59,27 +75,30 @@ export default function RecommendationPage() {
             </button>
           </div>
         <SubmissionForm onSubmit={handleQuery} loading={loading}/>
-
         {/* Reaching here means their query was a success */}
-        {results && (
-          <ul>
-
-            {/* List out their recommendations */}
-            {results.map((r: any) => (
-              <li key={r.id}>
-                <strong>Movie: {r.movie} ({r.yearOfRelease}) {r.similarityScore}</strong>
-                <Image src={r.poster} width={200} height={200} alt="Movie" />
-                <div>
-                  <strong>Description:</strong>
+        <div>
+          {results === null ? (
+              <p>Press enter to query, top movies will show here</p>
+          ) : ( 
+            <ul>
+              Top movies:
+              {/* List out their recommendations */}
+              {results.map((r: any) => (
+                <li key={r.id}>
+                  <strong>Movie: {r.movie} ({r.yearOfRelease}) {r.similarityScore}</strong>
+                  <Image src={r.poster} width={200} height={200} alt="Movie" />
                   <div>
-                    <strong>{r.description}  </strong>
+                    <strong>Description:</strong>
+                    <div>
+                      <strong>{r.description}  </strong>
+                    </div>
                   </div>
-                </div>
-                <br />
-              </li>
-            ))}
-          </ul>
-        )}
+                  <br />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     );
 }

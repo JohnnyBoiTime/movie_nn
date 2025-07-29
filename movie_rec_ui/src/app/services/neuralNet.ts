@@ -3,6 +3,7 @@ import nextRoute from "../apiRoutes/nextAPI";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import {authOptions} from "../api/auth/[...nextauth]/route"
+import axios, { isAxiosError } from "axios";
 
 // Format of the json response
 interface Movie {
@@ -17,9 +18,6 @@ interface Movie {
 // Gets the recommendations from the neural network
 export async function getRecommendations(title: string, year: string, k: number) {
 
-    // User is logged in! Can proceed with giving them recommendations 
-    const movieArray: Movie[] = [];
-
     try {
 
         const response = await djangoRoute.get<Movie[] | null>("/movieRecommendationService/",
@@ -32,8 +30,20 @@ export async function getRecommendations(title: string, year: string, k: number)
 
         return response.data;
 
-   } catch(error) {
-      console.error("Could not do it: ", error);
+   } catch(error: unknown) {
+     if (axios.isAxiosError(error)) {
+      const status = error.response?.status;
+
+        // Too many requests!
+        if (status === 429) {
+          return 429;
+        }
+        else {
+          return {error: "Something went wrong"};
+        }
+     }
+      
+  
   } finally {
     console.log("Finished getting recs!");
   };

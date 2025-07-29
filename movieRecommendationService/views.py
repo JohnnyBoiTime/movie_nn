@@ -1,20 +1,41 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.http import JsonResponse
+from django_ratelimit.decorators import ratelimit
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt, csrf_protect
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from .movieRecModel import recommendationSystemTest
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.utils.decorators import method_decorator
 import json
 import time
 import requests
 
 # API respones from the model and TMDB
+@method_decorator(
+    ratelimit(key='ip', rate='5/m', block=False),
+    name='dispatch'
+)
 class RecommendationView(APIView):
-    def get(self, request):
+
+  
+
+    # Reached the rate limit
+    def dispatch(self, request, *args, **kwargs):
+
+        if getattr(request, 'limited', False):
+
+            # return a 429 with a JSON body
+            return JsonResponse(
+                {'detail': 'Too many requests sent!'},
+                status=429
+            )
+        
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
 
         movieTitle = request.query_params.get('title')
         movieYear = request.query_params.get('year')
@@ -25,29 +46,26 @@ class RecommendationView(APIView):
 
         for index, (movie, score) in enumerate(recommendation, start=1):
 
-            # Given Heat (1995)
-            title, year = movie.split(" (") # ["Heat", "1995)"]
-            year = year.rstrip(")") # 1995
+            # Split only on the last paranthesis to
+            # ignore paranthesis before the year. 
+            # example: Saving Silverman (Evil Woman) (2001)
+            # ignores (Evil Woman). Ensures we get only the title 
+            # and year
+            titleYear = movie.rsplit(" (", 1)
+            title = titleYear[0]
+            year = titleYear[1].rstrip(")") if len(titleYear) == 2 else ""
 
-
-            # Check if the information already exists in redis
+            # Check if the information already exists in cache
             # to reduce request strain (hit)
             cacheKey = f"tmdb:search:{title}:{year}"
-
-            # Log time to get key to make sure cache is working
-            timeToGetKey = time.perf_counter()
 
             # Check to see if the movie already exists
             # in the cache
             movieInfo = cache.get(cacheKey)
 
-            elapsed_ms_time = (time.perf_counter() - timeToGetKey) * 1000
-
             # It does not exist in the cache (miss), so add
             # it do the cache
             if movieInfo is None:
-
-                print(f"[Cache miss] {cacheKey} (lookup took {elapsed_ms_time:.2f} ms)")
 
                 # Get info from TMDB for description and a movie poster
                 tmdbResponse = requests.get(settings.TMDB_SEARCH_URL,
@@ -74,9 +92,6 @@ class RecommendationView(APIView):
                 movieInfo = tmdbData
 
             # The information exists in the cache!
-            # Log time omg
-            else :
-                print(f"[Cache Hit] {cacheKey} (lookup took {elapsed_ms_time:.2f} ms)")
 
             # Fill in all information for the JSON
             moviePosterPath = movieInfo.get('poster_path')
@@ -94,20 +109,6 @@ class RecommendationView(APIView):
                 "similarityScore": score,
             })
 
-
-        """
-        # Include id so we can render in next js using .map
-        data = [
-
-            {
-                "id": index,
-                'movie': movie, 
-                'similarityScore': score
-            } 
-            for index, (movie, score) in enumerate(recommendation, start=1)
-            ]
-
-         """   
         return JsonResponse(data,
                             safe=False, 
                             json_dumps_params={'indent': 2}
@@ -129,8 +130,6 @@ def userLogin(request):
         return JsonResponse({"detail": "POST Method only "}, status=405)
     
     data = json.loads(request.body)
-
-    print(data)
 
     # Authenticate the users credentials in the database
     user = authenticate(

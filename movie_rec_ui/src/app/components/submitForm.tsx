@@ -1,5 +1,5 @@
 'use client'
-import {FormEvent, useState} from 'react';
+import {FormEvent, useState, useEffect} from 'react';
 
 // Info for the expected json format for apu
 export interface Movies {
@@ -79,7 +79,6 @@ export default function SubmissionForm({
             </div>
             {/** Press enter get results */}
             <button type="submit" disabled={loading}>
-                {loading ? "Loading, please wait..." : "Recommended movies: "}
             </button>
         </form>
     );
