@@ -1,5 +1,5 @@
-# Pull image which includes python
-FROM python:3.12.10-slim
+# Build state
+FROM python:3.12.10-slim AS builder
 
 # apt-get update: Refresh packages (advanced packaging tool, debian)
 # build-essential: C compiler
@@ -15,7 +15,11 @@ WORKDIR /app
 # Copy python modules from requirements.txt
 # and install them
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+ENV PATH="/install/bin:${PATH}"    
+ENV PYTHONPATH="/install/lib/python3.12/site-packages:${PYTHONPATH}"
 
 # Copy everything else from the project 
 # First dot -> Source (Host)
@@ -23,12 +27,33 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Put static assets into folder
-RUN python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput 
+RUN python manage.py migrate --noinput
+
+# Create runtime image
+
+FROM python:3.12.10-slim
+
+# Create non-privileged user to limit 
+# control on the container
+RUN groupadd --system appgroup \ 
+    && useradd --system --gid appgroup appuser
+
+WORKDIR /app
+
+COPY --from=builder /install /usr/local
+
+COPY --from=builder /app /app
+
+ENV PATH="/usr/local/bin:${PATH}"
 
 # Tell the project where to listen for incoming
 # requests
-EXPOSE 8000
+ENV PORT=8080
+EXPOSE 8080
 
-# Start django app and bind interface to 8000, will change to something
+USER appuser
+
+# Start django app and bind interface to 8080, will change to something
 # else later
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "movieRecproj.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "movieRecproj.wsgi:application"]

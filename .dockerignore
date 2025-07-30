@@ -3,7 +3,6 @@ movie_rec_ui
 testModel.py
 trainModel.py
 recommendation.py
-data
 trainingOutputs.txt
 datasets.py
 scripts

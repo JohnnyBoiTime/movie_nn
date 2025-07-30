@@ -8,6 +8,7 @@ from .movieRecModel import recommendationSystemTest
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 import json
 import time
@@ -19,8 +20,6 @@ import requests
     name='dispatch'
 )
 class RecommendationView(APIView):
-
-  
 
     # Reached the rate limit
     def dispatch(self, request, *args, **kwargs):
@@ -113,6 +112,10 @@ class RecommendationView(APIView):
                             safe=False, 
                             json_dumps_params={'indent': 2}
                             )
+    
+# Health check
+def healthz(request):
+    return HttpResponse("OK", status=200)
     
 ######################################
 # CSRF AND USER AUTHENTICATION VIEWS #

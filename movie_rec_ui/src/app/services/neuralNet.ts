@@ -1,9 +1,5 @@
 import djangoRoute from "../apiRoutes/djangoAPI";
-import nextRoute from "../apiRoutes/nextAPI";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import {authOptions} from "../api/auth/[...nextauth]/route"
-import axios, { isAxiosError } from "axios";
+import axios from "axios";
 
 // Format of the json response
 interface Movie {

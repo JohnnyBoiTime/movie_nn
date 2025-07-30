@@ -1,8 +1,6 @@
 import { loginUser } from "@/app/services/user"
-import djangoRoute from "@/app/apiRoutes/djangoAPI"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import GoogleProvider from "next-auth/providers/google"
 
 // Configure auth
 export const authOptions = {

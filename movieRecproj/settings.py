@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+SECRET_KEY = os.getenv["DJANGO_SECRET_KEY"]
 
 # API stuff
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
@@ -34,18 +34,22 @@ TMDB_SEARCH_URL = 'https://api.themoviedb.org/3/search/movie'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
+# For SECURE_SSL_REDIRECT
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Security stuff
-# SECURE_SSL_REDIRECT      = True 
-# SESSION_COOKIE_SECURE    = True
-# CSRF_COOKIE_SECURE       = True
-# SECURE_HSTS_SECONDS      = 3600
-# SECURE_BROWSER_XSS_FILTER= True
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 86400
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
 
 ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1"
+    os.getenv("DJANGO_HOST"),
 ]
 
 # Application definition
@@ -59,32 +63,43 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'movieRecommendationService',
-    'corsheaders'
+    'corsheaders',
+    "whitenoise.runserver_nostatic"
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",
     "https://movierecommendation-9vh1rf0o8-philip-rickeys-projects.vercel.app",
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",     
     "https://movierecommendation-9vh1rf0o8-philip-rickeys-projects.vercel.app",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+    }
+}
 
 ROOT_URLCONF = 'movieRecproj.urls'
 
@@ -170,6 +185,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # Default primary key field type
