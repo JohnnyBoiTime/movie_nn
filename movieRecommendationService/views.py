@@ -126,7 +126,7 @@ def healthz(request):
 @ensure_csrf_cookie
 def csrfTokenView(request):
     print("CSRF TOKEN!!!!")
-    return JsonResponse({'csrfToken': get_token(request)})
+    return JsonResponse({'Details': 'CSRF set'})
 
 @csrf_exempt
 def userLogin(request):

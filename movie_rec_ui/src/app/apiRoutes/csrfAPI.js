@@ -18,14 +18,14 @@ const csrfRoute = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
+    xsrfCookieName: "csrftoken",
+    xsrfHeaderName: "X-CSRFToken",
 });
 
 // Cookeis + csrf token
 csrfRoute.interceptors.request.use(async (config) => {
     if (!Cookies.get('csrftoken')) {
-        const setToken =  await preCSRFF.get('/csrf/');
-
-        console.log(setToken);
+        await preCSRFF.get('/csrf/');
 
         console.log("CSRF token fetched and set in cookies.");
     }
