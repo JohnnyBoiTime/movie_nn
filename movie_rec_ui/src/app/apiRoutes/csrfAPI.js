@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 const API_BASE = process.env.NEXT_PUBLIC_BASE_ROUTE;
 
