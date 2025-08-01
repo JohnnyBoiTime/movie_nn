@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import dj_database_url
 from dotenv import load_dotenv
+from corsheaders.defaults import default_headers
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -98,6 +99,11 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+# Allow the token to be accepted
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "x-csrftoken"
+]
 
 LOGGING = {
     "version": 1,
