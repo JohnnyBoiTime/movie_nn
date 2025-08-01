@@ -1,6 +1,5 @@
 # Build state
 FROM python:3.12.10-slim AS builder
-
 # apt-get update: Refresh packages (advanced packaging tool, debian)
 # build-essential: C compiler
 RUN apt-get update \ 
@@ -48,12 +47,12 @@ COPY --from=builder /app /app
 ENV PATH="/usr/local/bin:${PATH}"
 
 # Tell the project where to listen for incoming
-# requests
+# requests.
 ENV PORT=8080
 EXPOSE 8080
 
 USER appuser
 
 # Start django app and bind interface to 8080, will change to something
-# else later
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "movieRecproj.wsgi:application"]
+# else later. sh -c expands the port
+CMD ["sh", "-c", "exec gunicorn movieRecproj.wsgi:application --bind 0.0.0.0:$PORT"]

@@ -25,7 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-SECRET_KEY = os.getenv["DJANGO_SECRET_KEY"]
+SECRET_KEY = os.getenv("SECRET_KEY", "")
+
+DATABASE_URL = os.getenv("DATABASE_URL", "")
 
 # API stuff
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
@@ -49,7 +51,8 @@ SECURE_HSTS_PRELOAD = True
 
 
 ALLOWED_HOSTS = [
-    os.getenv("DJANGO_HOST"),
+   os.getenv("DJANGO_HOST", ""), # For production
+   "https://movierecommendation-9vh1rf0o8-philip-rickeys-projects.vercel.app",
 ]
 
 # Application definition
@@ -97,7 +100,7 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console"],
-        "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+        "level": "INFO",
     }
 }
 
@@ -123,13 +126,24 @@ WSGI_APPLICATION = 'movieRecproj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.parse(
-        os.environ["SUPABASE_DATABASE_URL"],
-        conn_max_age=600, # Keep connection open for 10 mins
-        ssl_require=True # require encryption
-    )
-}
+
+# This is so we can build the image successfully, 
+# then change to the real database on google cloud run
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600, # Keep connection open for 10 mins
+            ssl_require=True # require encryption
+        )
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "build.sqlite3"
+        }
+    }
 
 # redis configuration
 

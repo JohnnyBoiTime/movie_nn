@@ -1,4 +1,3 @@
-# No need to put the front end in
 movie_rec_ui
 testModel.py
 trainModel.py
@@ -9,5 +8,14 @@ scripts
 venv
 .gitignore
 __pycache__
-.vscode
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+staticfiles/
+media/
+
 .env
+
