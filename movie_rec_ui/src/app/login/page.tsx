@@ -6,11 +6,6 @@ import { useDispatch} from "react-redux";
 import {AppDispatch } from "../redux/store";
 import {setUsername} from "../redux/slices/profileSlice";
 
-interface Login {
-    username: string;
-    password: string;
-}
-
 export default function LoginPage() {
     const [form, setForm] = useState({
         username: "",

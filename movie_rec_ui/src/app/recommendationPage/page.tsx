@@ -25,10 +25,7 @@ export default function RecommendationPage() {
 
   // Store results and let user know if loading or not
   const [loading, setLoading] = useState(false);
-  const [locked, setLocked] = useState(true);
-  const [tooManyRequests, setTooManyRequests] = useState(false);
   const [results, setResults] = useState<Movie[] | any>(null);
-  
 
   const user = useSelector((state: RootState) => state.profile)
 
