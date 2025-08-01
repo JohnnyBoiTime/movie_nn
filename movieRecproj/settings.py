@@ -29,6 +29,9 @@ SECRET_KEY = os.getenv("SECRET_KEY", "")
 
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 
+DJANGO_HOST = os.getenv("DJANGO_HOST", "")
+
+
 # API stuff
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
@@ -49,10 +52,9 @@ SECURE_HSTS_SECONDS = 86400
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
-
 ALLOWED_HOSTS = [
-   os.getenv("DJANGO_HOST", ""), # For production
-   "https://movie-nn.vercel.app",
+   DJANGO_HOST,
+   "movie-nn.vercel.app",
 ]
 
 # Application definition
