@@ -25,6 +25,7 @@ const csrfRoute = axios.create({
 csrfRoute.interceptors.request.use(async (config) => {
 
     const token = await preCSRFF.get('/csrf/');
+    console.log(token);
     config.headers['X-CSRFToken'] = token;    
 
     return config;
