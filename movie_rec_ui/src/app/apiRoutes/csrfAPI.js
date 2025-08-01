@@ -1,21 +1,19 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-// const API_BASE = process.env.NEXT_PUBLIC_BASE_ROUTE; // Dev
-    const API_BASE = process.env.NEXT_PUBLIC_BASE_ROUTE_TEST; // Prod
+    const API_BASE = process.env.NEXT_PUBLIC_BASE_ROUTE; // Dev
+    // const API_BASE = process.env.NEXT_PUBLIC_BASE_ROUTE_TEST; // Prod
 
 // Axios for pre-csrf
 const preCSRFF = axios.create({
-    baseURL: `/api`, // For production
-    // baseURL: '/api', // For testing
+    baseURL: `${API_BASE}/api`,
     withCredentials: true,
 });
 
 
 // Axios for csrf 
 const csrfRoute = axios.create({
-    //baseURL: `${API_BASE}/api`,
-    baseURL: `/api`, // For testing
+    baseURL: `${API_BASE}/api`,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
