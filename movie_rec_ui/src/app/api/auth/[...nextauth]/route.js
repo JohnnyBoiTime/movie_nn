@@ -1,5 +1,4 @@
 import { loginUser } from "@/app/services/user"
-import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
 // Configure auth
