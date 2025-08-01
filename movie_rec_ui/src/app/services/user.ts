@@ -1,5 +1,4 @@
 import djangoRoute from "../apiRoutes/djangoAPI";
-import csrfRoute from "../apiRoutes/csrfAPI";
 
 export interface Registration {
     username: string;
