@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import StoreProvider from "./redux/StoreProvider";
-import { SessionProvider } from "next-auth/react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
