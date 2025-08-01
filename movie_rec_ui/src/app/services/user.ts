@@ -1,4 +1,5 @@
 import djangoRoute from "../apiRoutes/djangoAPI";
+import csrfRoute from "../apiRoutes/csrfAPI";
 
 export interface Registration {
     username: string;
@@ -22,7 +23,7 @@ export interface User {
  ********************************/
 export async function registerUser(data: Registration) {
 
-    const response = await djangoRoute.post('/register/', data);
+    const response = await csrfRoute.post('/register/', data);
 
     console.log(response);
 
