@@ -52,7 +52,7 @@ SECURE_HSTS_PRELOAD = True
 
 ALLOWED_HOSTS = [
    os.getenv("DJANGO_HOST", ""), # For production
-   "https://movierecommendation-9vh1rf0o8-philip-rickeys-projects.vercel.app",
+   "https://movie-nn.vercel.app",
 ]
 
 # Application definition
@@ -83,11 +83,11 @@ MIDDLEWARE = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://movierecommendation-9vh1rf0o8-philip-rickeys-projects.vercel.app",
+    "https://movie-nn.vercel.app",
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://movierecommendation-9vh1rf0o8-philip-rickeys-projects.vercel.app",
+    "https://movie-nn.vercel.app",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

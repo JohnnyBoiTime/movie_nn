@@ -23,7 +23,7 @@ export interface User {
  ********************************/
 export async function registerUser(data: Registration) {
 
-    const response = await csrfRoute.post('/register/', data);
+    const response = await djangoRoute.post('/register/', data);
 
     console.log(response);
 
