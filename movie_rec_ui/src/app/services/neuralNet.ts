@@ -12,7 +12,7 @@ interface Movie {
 };
 
 // Gets the recommendations from the neural network
-export async function getRecommendations(title: string, year: string, k: number) {
+export async function getRecommendations(title: string, year: string, k: number){
 
     try {
 
@@ -24,7 +24,7 @@ export async function getRecommendations(title: string, year: string, k: number)
     
         console.log(response);
 
-        return response.data;
+        return response.data ?? [];
 
    } catch(error: unknown) {
      if (axios.isAxiosError(error)) {
@@ -34,9 +34,7 @@ export async function getRecommendations(title: string, year: string, k: number)
         if (status === 429) {
           return 429;
         }
-        else {
-          return {error: "Something went wrong"};
-        }
+
      }
       
   

@@ -25,7 +25,7 @@ export default function RecommendationPage() {
 
   // Store results and let user know if loading or not
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<Movie[] | null>(null);
+  const [results, setResults] = useState<Movie[] | null | undefined | number>(null);
 
   const user = useSelector((state: RootState) => state.profile)
 
@@ -36,7 +36,7 @@ export default function RecommendationPage() {
     setResults(null)
 
      
-     const response: Movie[] | any | null = await getRecommendations(title, year, k);
+     const response: Movie[] | number | undefined = await getRecommendations(title, year, k);
 
      console.log(response);
 
@@ -80,7 +80,7 @@ export default function RecommendationPage() {
             <ul>
               Top movies:
               {/* List out their recommendations */}
-              {results.map((r: Movie) => (
+              {Array.isArray(results) && results.map((r: Movie) => (
                 <li key={r.id}>
                   <strong>Movie: {r.movie} ({r.yearOfRelease}) {r.similarityScore}</strong>
                   <Image src={r.poster} width={200} height={200} alt="Movie" />
