@@ -26,7 +26,7 @@ csrfRoute.interceptors.request.use(async (config) => {
 
     const token = await preCSRFF.get('/csrf/');
     console.log(token.data);
-    config.headers['X-CSRFToken'] = token.data;    
+    config.headers['X-CSRFToken'] = token.data.csrfToken;    
 
     console.log(config);
 
