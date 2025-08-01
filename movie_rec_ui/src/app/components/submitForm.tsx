@@ -1,5 +1,5 @@
 'use client'
-import {FormEvent, useState, useEffect} from 'react';
+import {FormEvent, useState} from 'react';
 
 // Info for the expected json format for apu
 export interface Movies {

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {signIn} from "next-auth/react";
 import { useDispatch} from "react-redux";
-import {RootState, AppDispatch } from "../redux/store";
+import {AppDispatch } from "../redux/store";
 import {setUsername} from "../redux/slices/profileSlice";
 
 interface Login {

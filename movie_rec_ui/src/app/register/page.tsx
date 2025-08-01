@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {signIn} from "next-auth/react";
-import {registerUser, User} from "../services/user"
+import {registerUser} from "../services/user"
 
 export default function LoginPage() {
     const [form, setForm] = useState({
