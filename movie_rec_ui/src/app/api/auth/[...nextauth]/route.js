@@ -3,7 +3,7 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
 // Configure auth
-export const authOptions = {
+const authOptions = {
 
     // Custom login page
     pages: {
