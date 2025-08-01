@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import SubmissionForm, {Movies} from "../components/submitForm";
 import { useSelector } from "react-redux";
@@ -65,12 +66,20 @@ export default function RecommendationPage() {
           <div>
             User: {user.username}
           </div>
-          <div>
+          {user.username === 'Guest' ? (
+          <div>        
+            <Link href="/login" style={{textDecoration: 'underline'}}>
+              Go back to login
+            </Link>
+          </div>
+          ) : (
+            <div>        
             <button onClick={() => signOut({
               callbackUrl: "/"
               })}> Sign Out 
             </button>
           </div>
+          )}
         <SubmissionForm onSubmit={handleQuery} loading={loading}/>
         {/* Reaching here means their query was a success */}
         <div>

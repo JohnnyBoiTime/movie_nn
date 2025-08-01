@@ -1,5 +1,6 @@
 'use client';
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {signIn} from "next-auth/react";
 import { useDispatch} from "react-redux";
@@ -68,9 +69,9 @@ export default function LoginPage() {
                             onChange={e => setForm({...form, password: e.target.value})}
                             required
                         />
-                            <button className="border" type="submit">
+                            <Link className="text-center border" href="" type="submit">
                                 Login 
-                            </button>
+                            </Link>
                     </form>
                     <div className="text-center border">
                         {/** 
@@ -80,12 +81,17 @@ export default function LoginPage() {
                         */}
                     </div>
                     <div className="text-center">
+                        <Link href="/recommendationPage" style={{textDecoration: 'underline'}}  onClick={() => dispatch(setUsername("Guest")) }>
+                            Continue as Guest
+                        </Link>
+                    </div>
+                     <div className="text-center">
                         --OR--
                     </div>
-                    <div className="border text-center">
-                        <button onClick={() => router.push("/register")}>
+                    <div className="text-center">
+                        <Link className="text-center" style={{textDecoration: 'underline'}} href="/register">
                             Register
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>
