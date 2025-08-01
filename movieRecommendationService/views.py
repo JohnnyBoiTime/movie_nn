@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.http import JsonResponse
+from django.views.decorators.http import require_GET
 from django.middleware.csrf import get_token
 from django_ratelimit.decorators import ratelimit
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt, csrf_protect
@@ -123,10 +124,11 @@ def healthz(request):
 ######################################
 
 # Set the csrf cookie
-@ensure_csrf_cookie
+@require_GET
 def csrfTokenView(request):
     print("CSRF TOKEN!!!!")
-    return JsonResponse({'Details': 'CSRF set'})
+    token = get_token(request)
+    return JsonResponse({'csrfToken': token})
 
 @csrf_exempt
 def userLogin(request):
