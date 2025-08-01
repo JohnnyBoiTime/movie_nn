@@ -102,7 +102,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 # Allow the token to be accepted
 CORS_ALLOW_HEADERS = list(default_headers) + [
-    'x-csrftoken'
+    "x-csrftoken",
 ]
 
 LOGGING = {
