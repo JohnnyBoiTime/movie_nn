@@ -22,40 +22,6 @@ export interface User {
 /********************************
  * API calls
  ********************************/
-
-
-/** 
- * 
- * 
-    try {
-
-        const response = await djangoRoute.get<Movie[] | null>("/movieRecommendationService/",
-                {
-                params: {title, year, k}
-                }
-            );  
-    
-        console.log(response);
-
-        return response.data ?? [];
-
-   } catch(error: unknown) {
-     if (axios.isAxiosError(error)) {
-      const status = error.response?.status;
-
-        // Too many requests!
-        if (status === 429) {
-          return 429;
-        }
-
-     }
-      
-  
-  } finally {
-    console.log("Finished getting recs!");
-  };
-
- */
 export async function registerUser(data: Registration) {
 
     try {
