@@ -1,5 +1,5 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
+import { headers } from 'next/headers';
 
     const API_BASE = process.env.NEXT_PUBLIC_BASE_ROUTE; // Dev
     // const API_BASE = process.env.NEXT_PUBLIC_BASE_ROUTE_TEST; // Prod
@@ -31,9 +31,10 @@ csrfRoute.interceptors.request.use(async (config) => {
         console.log("CSRF token fetched and set in cookies.");
     }
 
-    const cookie = Cookies.get("csrftoken")
+    const headersList = headers();
+    const csrfCookie = await headersList.get('Cookie')
 
-    console.log(cookie);
+    console.log(csrfCookie);
 
     
 
