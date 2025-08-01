@@ -152,7 +152,17 @@ def userLogin(request):
 
 
 # Registers the user
+# 2/hour if somehow the user made a mistake in registering
+# the first time
+@ratelimit(key='ip', rate='2/h', block=False)
 def userRegister(request):
+
+    if getattr(request, "limited", False):
+        return JsonResponse(
+                {'detail': 'Too many requests sent!'},
+                status=429
+            ) 
+
     if request.method != "POST":
         return JsonResponse({"detail": "POST method only"}, status=405)
 
