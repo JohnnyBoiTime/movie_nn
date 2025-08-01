@@ -15,12 +15,14 @@ const preCSRFF = axios.create({
 const csrfRoute = axios.create({
     baseURL: `${API_BASE}/api`,
     withCredentials: true,
+    xsrfCookieName: "csrftoken",
+    xsrfHeaderName: "X-CSRFToken",
+   
     headers: {
         'Content-Type': 'application/json',
     },
-    xsrfCookieName: "csrftoken",
-    xsrfHeaderName: "X-CSRFToken",
-});
+     });
+   
 
 // Cookeis + csrf token
 csrfRoute.interceptors.request.use(async (config) => {
@@ -30,7 +32,7 @@ csrfRoute.interceptors.request.use(async (config) => {
         console.log("CSRF token fetched and set in cookies.");
     }
 
-    config.headers['X-CSRFToken'] = Cookies.get('csrftoken=');
+    config.headers['X-CSRFToken'] = Cookies.get('csrftoken');
 
     return config;
 })
