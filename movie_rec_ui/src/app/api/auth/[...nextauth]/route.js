@@ -47,7 +47,3 @@ export const authOptions = {
     ],
     secret: process.env.NEXTAUTH_SECRET_KEY,
 };
-
-// Send it to the project
-const handler =  NextAuth(authOptions);
-export {handler as GET, handler as POST};
