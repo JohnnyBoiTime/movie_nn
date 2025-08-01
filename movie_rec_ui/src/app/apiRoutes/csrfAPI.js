@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const API_BASE = process.env.NEXT_PUBLIC_BASE_ROUTE;
 
-/*
 // Axios for pre-csrf
 const preCSRFF = axios.create({
     baseURL: `${API_BASE}/api`, // For production
@@ -11,7 +10,6 @@ const preCSRFF = axios.create({
     
 });
 
-**/
 
 
 // Axios for csrf 
