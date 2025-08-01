@@ -26,7 +26,7 @@ export const authOptions = {
                     try {
                     
                         // Login the user by seeing if it exists in the database
-                    const response = await loginUser({
+                    await loginUser({
                         username: credentials.username,
                         password: credentials.password,
                     })
