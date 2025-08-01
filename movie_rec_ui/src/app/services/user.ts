@@ -28,6 +28,8 @@ export async function registerUser(data: Registration) {
 
     const response = await csrfRoute.post('/register/', data);
 
+    console.log(response);
+
     return response;
 
     } catch (error: unknown) {
