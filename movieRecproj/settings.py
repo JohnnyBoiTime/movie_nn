@@ -88,6 +88,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 CSRF_TRUSTED_ORIGINS = [
     "https://movie-nn.vercel.app",
 ]
