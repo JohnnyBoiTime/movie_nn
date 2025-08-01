@@ -17,9 +17,9 @@ const csrfRoute = axios.create({
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
+        'xsrfCookieName': 'csrftoken',
+        'xsrfHeaderName': 'X-CSRFToken'
     },
-    xsrfCookieName: "csrftoken",
-    xsrfHeaderName: "X-CSRFToken",
 });
 
 // Cookeis + csrf token
