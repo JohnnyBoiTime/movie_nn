@@ -20,11 +20,14 @@ export default function LoginPage() {
         e.preventDefault();
 
         const registerTheUser = await registerUser(form);
-        if (registerTheUser.status !== 201) {
-            console.error("Could not register user: ", registerTheUser.data);
+
+        if (registerTheUser === 201) {
+            console.error("Could not register user: ", registerTheUser);
+        } else if (registerTheUser === 429) {
+            router.push('/tooManyRegistrations')
         } else {
             console.log("Successfully registered!");
-            router.push("./login");
+            router.replace("./login");
         }
     }
 

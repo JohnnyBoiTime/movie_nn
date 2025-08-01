@@ -1,5 +1,6 @@
 import djangoRoute from "../apiRoutes/djangoAPI";
 import csrfRoute from "../apiRoutes/csrfAPI";
+import axios from "axios";
 
 export interface Registration {
     username: string;
@@ -21,22 +22,67 @@ export interface User {
 /********************************
  * API calls
  ********************************/
+
+
+/** 
+ * 
+ * 
+    try {
+
+        const response = await djangoRoute.get<Movie[] | null>("/movieRecommendationService/",
+                {
+                params: {title, year, k}
+                }
+            );  
+    
+        console.log(response);
+
+        return response.data ?? [];
+
+   } catch(error: unknown) {
+     if (axios.isAxiosError(error)) {
+      const status = error.response?.status;
+
+        // Too many requests!
+        if (status === 429) {
+          return 429;
+        }
+
+     }
+      
+  
+  } finally {
+    console.log("Finished getting recs!");
+  };
+
+ */
 export async function registerUser(data: Registration) {
+
+    try {
 
     const response = await csrfRoute.post('/register/', data);
 
-    console.log(response);
-
     return response;
+
+    } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+            const status = error.response?.status;
+
+            // To many requests to register
+            if (status === 429) {
+                return 429;
+            }
+            // Other error
+            else {
+                return 201;
+            }
+        }
+    }
 }
 
 export async function loginUser(data: Login) {
 
-    console.log("Inside of loginUser function:", data);
-
     const response = await djangoRoute.post('/login/', data);
-
-    console.log("Response from the await: ", response);
 
     return response;
 }
