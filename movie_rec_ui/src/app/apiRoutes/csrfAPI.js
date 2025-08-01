@@ -30,7 +30,7 @@ csrfRoute.interceptors.request.use(async (config) => {
         console.log("CSRF token fetched and set in cookies.");
     }
 
-    config.headers['X-CSRFToken'] = Cookies.get('csrftoken');
+    config.headers['X-CSRFToken'] = Cookies.get('csrftoken=');
 
     return config;
 })
