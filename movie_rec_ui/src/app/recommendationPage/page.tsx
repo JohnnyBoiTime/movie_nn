@@ -26,6 +26,7 @@ export default function RecommendationPage() {
 
   // Store results and let user know if loading or not
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
   const [results, setResults] = useState<Movie[] | null | undefined | number>(null);
 
   const user = useSelector((state: RootState) => state.profile)
@@ -41,17 +42,18 @@ export default function RecommendationPage() {
 
      console.log(response);
 
+    // Too many requests
      if (response == 429) {
         setLoading(true)
         setResults(null);
         router.push("/tooManyRequests");
      }  
 
-     // Too many requests
+     // Movie does not exist, or error typing in movie
      else if (response == 300) {
-        setResults(response);
+        setResults(null);
         setLoading(false);
-        router.push("/movieDNE");
+        setMessage("Please check how you typed in the movie! Do you have the correct day and year? If the movie was entered in correctly, the movie may not exist in the database!")
      }
 
      else {
@@ -91,6 +93,7 @@ export default function RecommendationPage() {
           ) : ( 
             <ul>
               Top movies:
+              {message}
               {/* List out their recommendations */}
               {Array.isArray(results) && results.map((r: Movie) => (
                 <li key={r.id}>
