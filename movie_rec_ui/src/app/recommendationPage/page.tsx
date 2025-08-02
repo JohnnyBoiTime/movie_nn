@@ -58,6 +58,7 @@ export default function RecommendationPage() {
 
      else {
         setResults(response);
+        setMessage("Top Movies: ")
         setLoading(false);
      }
   }
@@ -92,7 +93,6 @@ export default function RecommendationPage() {
               </p>
           ) : ( 
             <ul>
-              Top movies:
               {message}
               {/* List out their recommendations */}
               {Array.isArray(results) && results.map((r: Movie) => (
