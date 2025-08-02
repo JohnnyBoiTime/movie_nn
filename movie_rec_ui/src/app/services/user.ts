@@ -28,8 +28,6 @@ export async function registerUser(data: Registration) {
 
     const response = await csrfRoute.post('/register/', data);
 
-    console.log(response);
-
     return response;
 
     } catch (error: unknown) {
@@ -51,15 +49,11 @@ export async function registerUser(data: Registration) {
 export async function loginUser(data: Login) {
 
     const response = await djangoRoute.post('/login/', data);
-
-    return response;
 }
 
 export async function fetchLoggedinUser() {
 
      const response = await djangoRoute.post('/user/');
-
-    console.log(response);
 
     return response;
 }

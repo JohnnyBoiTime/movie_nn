@@ -157,7 +157,7 @@ def userLogin(request):
 # 5/hour if somehow the user made a mistake in registering
 # the first time
 @require_http_methods(["OPTIONS", "POST"])
-@ratelimit(key='ip', rate='5/h', block=False)
+@ratelimit(key='ip', rate='3/h', block=False)
 def userRegister(request):
 
     if getattr(request, "limited", False):
