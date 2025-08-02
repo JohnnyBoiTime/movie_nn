@@ -15,8 +15,6 @@ export default function LoginPage() {
     // Registration proccess
     async function registrationForm(e: React.FormEvent) {
 
-        console.log("Submitting:", form)
-
         e.preventDefault();
 
         const registerTheUser = await registerUser(form);
