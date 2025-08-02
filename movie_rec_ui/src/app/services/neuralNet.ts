@@ -34,6 +34,9 @@ export async function getRecommendations(title: string, year: string, k: number)
         if (status === 429) {
           return 429;
         }
+        else {
+          return 300;
+        }
 
      }
       

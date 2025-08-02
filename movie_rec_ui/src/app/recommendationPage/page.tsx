@@ -37,7 +37,7 @@ export default function RecommendationPage() {
     setResults(null)
 
      
-     const response: Movie[] | number | undefined = await getRecommendations(title, year, k);
+     const response: Movie[] | number | undefined = await getRecommendations(title.trim(), year, k);
 
      console.log(response);
 
@@ -48,15 +48,15 @@ export default function RecommendationPage() {
      }  
 
      // Too many requests
-     else if (response != 429) {
-       setResults(response);
+     else if (response == 300) {
+        setResults(response);
         setLoading(false);
+        router.push("/movieDNE");
      }
 
      else {
-        setResults(null)
-        setLoading(true)
-        router.push("/unkownError");
+        setResults(response);
+        setLoading(false);
      }
   }
 

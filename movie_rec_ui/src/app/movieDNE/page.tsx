@@ -3,7 +3,7 @@
 export default function UnkownError() {
     return (
         <div>
-            Unkown error encountered!
+            The movie you searched may not exist in the database!
         </div>
     );
 }
