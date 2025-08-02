@@ -19,8 +19,6 @@ export default function LoginPage() {
     // Registration and login
     async function loginForm(e: React.FormEvent) {
 
-        console.log("Submitting:", form)
-
         e.preventDefault();
 
         // user exists in the database,
@@ -36,7 +34,6 @@ export default function LoginPage() {
 
             // Session created and user logged in!
             if (response?.ok){
-                console.log("SUCCESSFULLY LOGGED IN!");
                 dispatch(setUsername(form.username));
                 router.replace("/");
             }
