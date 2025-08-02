@@ -49,6 +49,8 @@ export async function registerUser(data: Registration) {
 export async function loginUser(data: Login) {
 
     const response = await djangoRoute.post('/login/', data);
+
+    return response;
 }
 
 export async function fetchLoggedinUser() {
