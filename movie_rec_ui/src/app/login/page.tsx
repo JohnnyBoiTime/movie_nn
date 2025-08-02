@@ -69,17 +69,20 @@ export default function LoginPage() {
                             onChange={e => setForm({...form, password: e.target.value})}
                             required
                         />
+
                             <button type="submit">
                                 Login 
                             </button>
                     </form>
+                    {/*
                     <div className="text-center border">
-                        {/** 
+                    
                         <button onClick={() => signIn("google", {callbackUrl: "/"})} >
                             Sign in using google
                         </button>
-                        */}
+                    
                     </div>
+                    */}
                     <div className="text-center">
                         <Link href="/recommendationPage" style={{textDecoration: 'underline'}}  onClick={() => dispatch(setUsername("Guest")) }>
                             Continue as Guest
