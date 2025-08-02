@@ -85,7 +85,7 @@ export default function RecommendationPage() {
         <div>
           {results === null ? (
               <p>Press enter to query, top movies will show here. Some movies may not exist in the system, and some movies may not have
-                enough "good" recommendations to show, so shown results may be less than amount chosen 
+                enough worthy recommendations to show, so shown results may be less than amount chosen 
                 to recommend
               </p>
           ) : ( 
