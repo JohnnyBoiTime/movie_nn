@@ -51,7 +51,7 @@ export default function RecommendationPage() {
 
      // Movie does not exist, or error typing in movie
      else if (response == 300) {
-        setResults(null);
+        setResults([]);
         setLoading(false);
         setMessage("Please check how you typed in the movie! Do you have the correct day and year? If the movie was entered in correctly, the movie may not exist in the database!")
      }
@@ -86,7 +86,7 @@ export default function RecommendationPage() {
         {/* Reaching here means their query was a success */}
         <div>
           {results === null ? (
-              <p>Press enter to query, top movies will show here. Some movies may not exist in the system, and some movies may not have
+              <p>Press enter to query (CASE SENSITIVE), top movies will show here. Some movies may not exist in the system, and some movies may not have
                 enough worthy recommendations to show, so shown results may be less than amount chosen 
                 to recommend
               </p>
