@@ -81,8 +81,20 @@ class RecommendationView(APIView):
                 tmdbResponse.raise_for_status()
                 tmdbData = tmdbResponse.json()
 
-                # Only need to save the first result
-                tmdbData = tmdbData.get("results", [{}])[0]
+                # Filter out some results for better stuff
+                results = tmdbData.get("results") or []
+
+                # May not be able to be queried,
+                # So return amount found
+                if not results:
+                    return JsonResponse(
+                        data,
+                        safe=False,
+                        json_dumps_params={'indent': 2} 
+                        )
+
+                # Store title as key
+                tmdbData = results[0]
 
                 # Save the information under that key for an hour
                 cache.set(cacheKey, tmdbData, timeout=3600)

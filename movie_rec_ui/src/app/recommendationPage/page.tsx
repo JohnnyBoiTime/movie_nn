@@ -41,16 +41,16 @@ export default function RecommendationPage() {
 
      console.log(response);
 
-     if (response != 429) {
-        setResults(response);
-        setLoading(false);
+     if (response == 429) {
+        setLoading(true)
+        setResults(null);
+        router.push("/tooManyRequests");
      }  
 
      // Too many requests
-     else if (response == 429) {
-      setLoading(true)
-      setResults(null);
-      router.push("/tooManyRequests");
+     else if (response != 429) {
+       setResults(response);
+        setLoading(false);
      }
 
      else {
@@ -84,7 +84,10 @@ export default function RecommendationPage() {
         {/* Reaching here means their query was a success */}
         <div>
           {results === null ? (
-              <p>Press enter to query, top movies will show here</p>
+              <p>Press enter to query, top movies will show here. Some movies may not exist in the system, and some movies may not have
+                enough "good" recommendations to show, so shown results may be less than amount chosen 
+                to recommend
+              </p>
           ) : ( 
             <ul>
               Top movies:

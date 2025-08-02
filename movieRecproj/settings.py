@@ -61,8 +61,8 @@ CSRF_USE_SESSIONS = True
 
 
 ALLOWED_HOSTS = [
-   DJANGO_HOST,
-   "movie-nn.vercel.app",
+    DJANGO_HOST,
+    "movie-nn.vercel.app",
 ]
 
 # Application definition
