@@ -69,9 +69,9 @@ export default function LoginPage() {
                             onChange={e => setForm({...form, password: e.target.value})}
                             required
                         />
-                            <Link className="text-center border" href="" type="submit">
+                            <button type="submit">
                                 Login 
-                            </Link>
+                            </button>
                     </form>
                     <div className="text-center border">
                         {/** 

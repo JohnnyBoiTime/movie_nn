@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.http import JsonResponse
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_http_methods
 from django.middleware.csrf import get_token
 from django_ratelimit.decorators import ratelimit
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt, csrf_protect
@@ -154,9 +154,10 @@ def userLogin(request):
 
 
 # Registers the user
-# 2/hour if somehow the user made a mistake in registering
+# 5/hour if somehow the user made a mistake in registering
 # the first time
-@ratelimit(key='ip', rate='2/h', block=False)
+@require_http_methods(["OPTIONS", "POST"])
+@ratelimit(key='ip', rate='5/h', block=False)
 def userRegister(request):
 
     if getattr(request, "limited", False):
