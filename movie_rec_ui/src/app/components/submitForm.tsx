@@ -79,6 +79,15 @@ export default function SubmissionForm({
             </div>
             {/** Press enter get results */}
             <button type="submit" disabled={loading}>
+                {loading ? (
+                    <div>
+                        Fetching results, please wait....
+                    </div>
+                ): (
+                    <div>
+                        
+                    </div>
+                )}
             </button>
         </form>
     );

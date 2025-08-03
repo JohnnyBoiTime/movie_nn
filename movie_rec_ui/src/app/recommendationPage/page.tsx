@@ -39,6 +39,7 @@ export default function RecommendationPage() {
 
      
      const response: Movie[] | number | undefined = await getRecommendations(title.trim(), year, k);
+     
 
      console.log(response);
 
@@ -86,7 +87,7 @@ export default function RecommendationPage() {
         <SubmissionForm onSubmit={handleQuery} loading={loading}/>
         {/* Reaching here means their query was a success */}
         <div>
-          {results === null ? (
+          {results === null && loading === false ? (
               <p>Press enter to query (CasE sENsItIve), top movies will show here. Some movies may not exist in the system, and some movies may not have
                 enough worthy recommendations to show, so shown results may be less than amount chosen 
                 to recommend
