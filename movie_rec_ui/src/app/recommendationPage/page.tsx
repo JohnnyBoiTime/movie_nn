@@ -38,7 +38,7 @@ export default function RecommendationPage() {
     setResults(null)
 
      
-     const response: Movie[] | number | undefined = await getRecommendations(title.trim(), year, k);
+     const response: Movie[] | number | undefined = await getRecommendations(title.trim().toLowerCase(), year, k);
      
 
      console.log(response);

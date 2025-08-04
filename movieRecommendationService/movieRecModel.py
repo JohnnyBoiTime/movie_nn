@@ -21,8 +21,8 @@ movies = pd.read_csv(os.path.join(rawDataDirectory, "movies.csv"))
 movieDF = pd.read_csv(os.path.join(projectRoot, "data", "processed", "processedMovies.csv"))
 
 # Make it so user can simply type a string to get similar movies
-movieIdToTitle = dict(zip(movies.movieId, movies.title))
-titleToMovieId = dict(zip(movies.title, movies.movieId))
+movieIdToTitle = dict(zip(movieDF.movieId, movieDF.title))
+titleToMovieId = dict(zip(movieDF.title, movieDF.movieId))
 
 # Grab and load the pickles
 with open(moviePicke, "rb") as f:
@@ -101,7 +101,7 @@ def recommendationSystemTest(movieTitle, movieYear, k=5):
 
     # Build mask that exists if a movie is found that has
     # the same genres as the chosen movie
-    sharedMasking = overlappingGenres > 0
+    sharedMasking = overlappingGenres > 2
 
     # Don't recommend the movie to itself
     sharedMasking[index] = False

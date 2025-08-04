@@ -75,7 +75,7 @@ def main():
                 ratings.to(device),
                 genres.to(device)
             )
-
+            
             # Zero old gradients, take networks output,
             # then compute loss
             optimizeNetwork.zero_grad()

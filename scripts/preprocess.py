@@ -16,6 +16,17 @@ processedDataDirectory = os.path.join(projectRoot, "data", "processed")
 ratings = pd.read_csv(os.path.join(rawDataDirectory, "ratings.csv"))
 moviesDataFrame = pd.read_csv(os.path.join(rawDataDirectory, "movies.csv"))
 
+# Make it so stuff like Matrix, The -> The Matrix
+def standardizeTitles(title):
+    if ',' in title:
+        mainTitle, article = [s.strip() for s in title.rsplit(',' , 1) ]
+        if article.lower().startswith("the") or article.lower().startswith("a") or article.lower().startswith("an"):
+           return f"{article.title().split(" ")[0].lower()} {mainTitle.lower()} {article.title().split(" ")[1]}"
+
+    return title.lower()
+
+moviesDataFrame['title'] = moviesDataFrame['title'].apply(standardizeTitles)
+
 # drop dupes
 ratings = ratings.drop_duplicates(subset=['userId', "movieId"])
 
