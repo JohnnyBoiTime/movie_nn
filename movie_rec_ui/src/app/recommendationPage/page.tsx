@@ -54,7 +54,7 @@ export default function RecommendationPage() {
      else if (response == 300) {
         setResults([]);
         setLoading(false);
-        setMessage("Please check how you typed in the movie (It Is CaSe SenSitIve)! Do you have the correct day and year? If the movie was entered in correctly, the movie may not exist in the database!")
+        setMessage("Do you have the correct day and year? If the movie was entered in correctly, the movie may not exist in the database!")
      }
 
      else {
@@ -88,7 +88,7 @@ export default function RecommendationPage() {
         {/* Reaching here means their query was a success */}
         <div>
           {results === null && loading === false ? (
-              <p>Press enter to query (CasE sENsItIve), top movies will show here. Some movies may not exist in the system, and some movies may not have
+              <p>Press enter to query, top movies will show here. Some movies may not exist in the system, and some movies may not have
                 enough worthy recommendations to show, so shown results may be less than amount chosen 
                 to recommend
               </p>
