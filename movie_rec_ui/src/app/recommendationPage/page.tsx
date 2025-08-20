@@ -64,10 +64,6 @@ export default function RecommendationPage() {
      }
   }
 
-  const goToSavedMovies = () => {
-    router.push("/savedMovies");
-  }
-
     return (
       // Show user the results of their query
       <div>
