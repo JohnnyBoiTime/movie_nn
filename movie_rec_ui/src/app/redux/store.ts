@@ -10,10 +10,6 @@ const profilePersistConfig = {
 
 }
 
-const savedMoviesPersistConfig = {
-    key: ''
-}
-
 // On app load, merges profile information from the storage to the 
 // profile
 const peristedProfileReducer = persistReducer(profilePersistConfig, profileReducer);

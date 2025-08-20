@@ -1,36 +1,35 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+// https://www.freecodecamp.org/news/how-to-integrate-rtk-query-with-redux-toolkit
 
-// Profile state
-interface SavedMoviesState {
-    movies: string[];
-    year: string[];
-    descriptions: string[];
-}
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query";
 
-// Set initial states
-const initialState: SavedMoviesState = {
-    movies: [""],
-    year: [""],
-    descriptions: [""],
-};
+export const savedMoviesapi = createApi({
+    reducerPath: "savedMovies",
+    baseQuery: fetchBaseQuery({
+        baseUrl: process.env.NEXT_PUBLIC_DJANGO_API_ROUTE,
+        credentials: "include",
+        prepareHeaders: (headers) => {
 
-// Reducers
-const profileSlice = createSlice({
-    name: 'savedMovies',
-    initialState,
-    reducers: {
-        setMovies(state, action: PayloadAction<string[]>) { 
-            state.movies = action.payload;
-        },
-        setYears(state, action: PayloadAction<string[]>) { 
-            state.movies = action.payload;
-        },
-        setDescriptions(state, action: PayloadAction<string[]>) { 
-            state.movies = action.payload;
-        },
-    },
-});
+        }
 
-// exports actions to use in app
-export const {setMovies, setYears, setDescriptions} = profileSlice.actions; 
-export default profileSlice.reducer; // exports reducer to handle actions
+    }),
+    endpoints: (builder) => {
+        return {
+            getSavedMovies: builder.query({
+                query: (user) => ({
+                    url: "savedMovies",
+                    method: "GET",
+                    body: user,
+                })
+            }),
+
+            addSavedMovie: builder.mutation({
+                query: (movie) => ({
+                    url: "savedMovies",
+                    method: "POST",
+                    body: movie
+                })
+            })
+        }
+    }
+
+})
