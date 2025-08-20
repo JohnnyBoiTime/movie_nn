@@ -3,16 +3,22 @@ import {persistStore, persistReducer} from "redux-persist"
 import storage from "redux-persist/lib/storage" 
 import profileReducer from "./slices/profileSlice"
 
-const persistConfig = {
+const profilePersistConfig = {
     key: 'profile', // Store as profile
     storage, // stored in localStorage in browser
     whitelist: ['username'], // Username persists through refresh
 
 }
 
+const savedMoviesPersistConfig = {
+    key: ''
+}
+
 // On app load, merges profile information from the storage to the 
 // profile
-const peristedProfileReducer = persistReducer(persistConfig, profileReducer)
+const peristedProfileReducer = persistReducer(profilePersistConfig, profileReducer);
+
+
 
 // Create the store
 export const makeStore = configureStore({

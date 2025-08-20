@@ -64,12 +64,23 @@ export default function RecommendationPage() {
      }
   }
 
+  const goToSavedMovies = () => {
+    router.push("/savedMovies");
+  }
+
     return (
       // Show user the results of their query
       <div>
+        <div className="horizontal flex justify-between">
           <div>
             User: {user.username}
           </div>
+          <div>
+            <Link href='/savedMovies' style={{textDecoration: 'underline'}}>
+            Saved Movies
+            </Link>
+          </div>
+        </div>
           {user.username === 'Guest' ? (
           <div>        
             <Link href="/login" style={{textDecoration: 'underline'}}>

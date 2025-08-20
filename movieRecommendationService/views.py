@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
+from .models import Movie, SavedMovies
 import json
 import time
 import requests
@@ -130,10 +131,57 @@ class RecommendationView(APIView):
 # Health check
 def healthz(request):
     return HttpResponse("OK", status=200)
+
+# For getting the users saved movies and saving movies
+def savedMovies(request):
+    user = request.user
+
+    if not user.is_authenticated:
+        return JsonResponse({"detail": "Unauthenticated user"}, status=401)
+
+    # Get the users saved movies
+    if request.method == 'GET':
+        queryDatabase = (savedMovies.objects
+                         .select_related('movie')
+                         .filer(user=user)
+                         .order_by('-added_at'))
+        # Users saved movies
+        data = [
+            {
+                "id": savedMovie.id,
+                "added_at": savedMovie.added_at.isoformat(),
+                "movie": {
+                    "tmdb_id": savedMovie.movie.tmdb_id,
+                    "title": savedMovie.movie.title,
+                    "year": savedMovie.movie.year,
+                    "movie_poster_url": savedMovie.movie.movie_poster_url,
+                },
+            }
+            for savedMovie in queryDatabase
+        ]
+        return JsonResponse(data, safe=False)
     
-######################################
-# CSRF AND USER AUTHENTICATION VIEWS #
-######################################
+    # User saves a movie
+    if request.method == "POST":
+
+        # Retrieve the fields from the request
+        data = json.loads(request.body)
+        tmdb_id = data.get("tmdb_id")
+        title = data.get("title")
+        year = data.get("year")
+        movie_poster_url = data.get("movie_poster_url")
+
+        if not tmdb_id or not title or not year or not movie_poster_url:
+            return JsonResponse({"detail": "You are missing some fields! Check again!"}, status=400)
+        
+    SavedMovies.objects.get_or_create(data)
+
+    return JsonResponse({"detail": "Movie saved successfully!"}, status=201)
+    
+    
+#########################################################
+# CSRF AND USER AUTHENTICATION/LOGIN/REGISTRATION VIEWS #
+#########################################################
 
 # Set the csrf cookie
 @require_GET
@@ -217,4 +265,6 @@ def userLoggedIn(request):
         "username": request.user.username,
         "email": request.user.email,
     })
+
+
 
