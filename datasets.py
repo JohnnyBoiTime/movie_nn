@@ -42,7 +42,7 @@ class RatingsDataset(Dataset):
     def __len__(self):
         return len(self.ratings)
     
-    # Turn into tensors
+    # Get a specific movie 
     def __getitem__(self, idx):
         return (
             self.userIndex[idx],
