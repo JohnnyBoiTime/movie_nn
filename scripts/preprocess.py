@@ -39,7 +39,7 @@ moviesDataFrame["genreList"] = moviesDataFrame.genres.str.split("|")
 genreBinarizer = MultiLabelBinarizer()
 genreMatrix = genreBinarizer.fit_transform(moviesDataFrame["genreList"])
 
-# Map the genres back into the movies
+# Map the genres back into their respective movies
 for index, genre in enumerate(genreBinarizer.classes_):
     moviesDataFrame[genre] = genreMatrix[:, index]
 
@@ -48,7 +48,11 @@ numUsers = ratings.userId.value_counts()
 numMovies = ratings.movieId.value_counts()
 numGenres = genreMatrix.shape[1]
 
-# Keep users and movies that have at least 5 ratings
+# Keep users and movies that have at least 5 ratings,
+# this is so the network considers the "significant"
+# data and ignores smaller, more insignificate data
+# that may not do much for the network and may
+# just bog it down. 
 signifUsers = numUsers[numUsers >= 5].index
 signifMovies = numMovies[numMovies >= 5].index
 
