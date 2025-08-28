@@ -132,6 +132,7 @@ class RecommendationView(APIView):
 def healthz(request):
     return HttpResponse("OK", status=200)
 
+
 # For getting the users saved movies and saving movies
 def savedMovies(request):
     user = request.user
@@ -141,9 +142,9 @@ def savedMovies(request):
 
     # Get the users saved movies
     if request.method == 'GET':
-        queryDatabase = (savedMovies.objects
+        queryDatabase = (SavedMovies.objects
                          .select_related('movie')
-                         .filer(user=user)
+                         .filter(user=user)
                          .order_by('-added_at'))
         # Users saved movies
         data = [
@@ -174,9 +175,31 @@ def savedMovies(request):
         if not tmdb_id or not title or not year or not movie_poster_url:
             return JsonResponse({"detail": "You are missing some fields! Check again!"}, status=400)
         
-    SavedMovies.objects.get_or_create(data)
+        # Check if the movie already exists in the database
+        movie, _ = Movie.objects.get_or_create(
 
-    return JsonResponse({"detail": "Movie saved successfully!"}, status=201)
+            tmdb_id = tmdb_id,
+            defaults={"title": title, "year": year, "movie_poster_url": movie_poster_url}
+        )
+        
+        savedMovie, createdMovie = SavedMovies.objects.get_or_create(user=user, movie=movie)
+
+            # Return the movie we saved to confirm we saved it
+        return JsonResponse(
+            {
+            "id": savedMovie.id,
+            "added_at": savedMovie.added_at.isoformat(),
+            "movie": {
+                "tmdb_id": savedMovie.movie.tmdb_id,
+                "title": savedMovie.movie.title,
+                "year": savedMovie
+            },
+        },
+        status=201 if createdMovie else 200
+        )
+    
+    return JsonResponse({"detail": "Worked"})
+
     
     
 #########################################################

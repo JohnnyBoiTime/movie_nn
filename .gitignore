@@ -15,10 +15,6 @@ logs/
 staticfiles/
 media/
 
-# Node / Next.js
-frontend/node_modules/
-frontend/.next/
-
 # IDEs / OS
 .vscode/
 .idea/

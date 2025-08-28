@@ -66,7 +66,7 @@ ALLOWED_HOSTS = [
 ]
 
 # Application definition
-
+# https://stackoverflow.com/questions/27739668/django-1-7-makemigrations-freezing-hanging
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -77,13 +77,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'movieRecommendationService',
     'corsheaders',
-    "whitenoise.runserver_nostatic"
+    
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -149,8 +148,6 @@ if DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.parse(
             DATABASE_URL,
-            conn_max_age=600, # Keep connection open for 10 mins
-            ssl_require=True # require encryption
         )
     }
 else:

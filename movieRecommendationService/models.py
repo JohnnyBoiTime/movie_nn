@@ -18,7 +18,7 @@ class SavedMovies(models.Model):
 
     # For seeing how popular a movie is (Could be a cool mnetric)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='saved_by') 
-    added_at = models.DateTimeField(auto_new_add=True)
+    added_at = models.DateTimeField(auto_now_add=True)
 
     # Options 
     class Meta:
@@ -26,3 +26,5 @@ class SavedMovies(models.Model):
             models.UniqueConstraint(fields=["user", "movie"], name="unique_user_movies_saved"),
         ]
         indexes = [models.Index(fields=["user", "added_at"])]
+
+
