@@ -63,6 +63,8 @@ export const savedMoviesapi = createApi({
             }),
             
             // Adds a movie, so "mutates" the slice based on database change
+            // Movie = payload format sent in post
+            // SavedMovie = format returned
             addSavedMovie: builder.mutation<SavedMovie, Movie>({
                 async queryFn(movie, queryApi, extraOptions, baseQuery) {
                     try {

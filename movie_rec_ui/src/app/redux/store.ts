@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import {persistStore, persistReducer} from "redux-persist"
 import storage from "redux-persist/lib/storage" 
 import profileReducer from "./slices/profileSlice"
+import { savedMoviesapi } from "./slices/savedMoviesSlice";
 
 const profilePersistConfig = {
     key: 'profile', // Store as profile
@@ -20,6 +21,7 @@ const peristedProfileReducer = persistReducer(profilePersistConfig, profileReduc
 export const makeStore = configureStore({
     reducer: {
         profile: peristedProfileReducer,
+        [savedMoviesapi.reducerPath]: savedMoviesapi.reducer,
     },
 
     // redux-persist writes non-serializable data, so 

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -7,20 +7,37 @@ import Image from "next/image";
 import SubmissionForm, {Movies} from "../components/submitForm";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { savedMoviesapi, useAddSavedMovieMutation } from "../redux/slices/savedMoviesSlice";
 import { getRecommendations } from "../services/neuralNet";
 
 // Format of the json response
-    interface Movie {
-        id: number,
-        movie: string,
-        yearOfRelease: string,
-        description: string,
-        poster: string,
-        similarityScore: number
-    };
+interface Movie {
+    id: number,
+    movie: string,
+    yearOfRelease: string,
+    description: string,
+    poster: string,
+    similarityScore: number
+};
+
+type MovieFormat = {
+    tmdb_id: number,
+    title: string,
+    year: string,
+    movie_poster_url: string,
+};
+
+// orm of what is returned from server
+type SavedMovieFormat = {
+    id: number,
+    added_at: string,
+    movie: MovieFormat,
+}
 
 
 export default function RecommendationPage() {
+
+  const [addSavedMovie] = useAddSavedMovieMutation();
 
   const router = useRouter();
 
@@ -63,6 +80,16 @@ export default function RecommendationPage() {
         setLoading(false);
      }
   }
+
+  // Sends movie to database to save it
+  const handleSavingMovie = useCallback(async (saveMovie: MovieFormat) => {
+    try {
+      await addSavedMovie(saveMovie).unwrap();
+    }
+    catch(error) {
+      console.error("Could not save the movie!");
+    }
+  }, [addSavedMovie]);
 
     return (
       // Show user the results of their query
