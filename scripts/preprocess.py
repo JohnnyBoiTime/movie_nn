@@ -62,15 +62,19 @@ ratings = (
             ratings.movieId.isin(signifMovies)]
 )
 
-# LabelEncoder converts the categorical labels into integers
+# Make it so there are no gaps in between the userId's and 
+# movie IDs. Create encoder, fit the size to input indices,
+# and count them.
+# Example -> userIds = [1, 6, 9, 10, 142 , 163]
+# There are plenty of gaps [1-6], [10-142], so we simply
+# do this so we have unique userIds = [1,2,3,4,5,6] so there are no gaps. 
+# This ensures that when we embed information later,
+# we have simple indices from 0-n-1 (with n being the number of unique movies/users),
+# Which embedded layers need/require.
 userLabels = LabelEncoder()
 movieLabels = LabelEncoder()
-
-# We then fit the labels to the users and movie IDs
 ratings["userIndex"] = userLabels.fit_transform(ratings.userId)
 ratings["movieIndex"] = movieLabels.fit_transform(ratings.movieId)
-
-# Count unique indeces for the users and movies
 numUsers = ratings.userIndex.nunique()
 numMovies = ratings.movieIndex.nunique()
 
@@ -96,7 +100,8 @@ moviesDataFrame[
     ["movieId", "title"] + list(genreBinarizer.classes_)
 ].to_csv(os.path.join(processedDataDirectory, "processedMovies.csv"), index=False)    
 
-# Save label encoders
+# .pkl saves the encoders so we have them indefinitely. They reference
+# the labels we have just created so we always have them to use later.
 with open(os.path.join(processedDataDirectory, "userEncoder.pkl"), "wb") as f:
     pickle.dump(userLabels, f)
 
