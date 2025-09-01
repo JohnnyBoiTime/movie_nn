@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.conf import settings
 from django.http import JsonResponse
-from django.views.decorators.http import require_GET, require_http_methods
-from django.middleware.csrf import get_token
+from django.views.decorators.http import require_GET, require_POST
+from django.middleware.csrf import get_token, rotate_token
 from django_ratelimit.decorators import ratelimit
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt, csrf_protect
 from rest_framework.views import APIView
@@ -111,16 +111,17 @@ class RecommendationView(APIView):
             moviePosterPath = movieInfo.get('poster_path')
             moviePoster = f"https://image.tmdb.org/t/p/w200{moviePosterPath}"
             movieDescription = movieInfo.get("overview", "")
+            tmdb_id = movieInfo.get("id")
     
 
             # Send next.js the information for the movie
             data.append({
                 "id": index,
+                "tmdb_id": tmdb_id,
                 "movie": title,
                 "yearOfRelease": year,
                 "poster": moviePoster,
                 "description": movieDescription,
-                "similarityScore": score,
             })
 
         return JsonResponse(data,
@@ -152,10 +153,10 @@ def savedMovies(request):
                 "id": savedMovie.id,
                 "added_at": savedMovie.added_at.isoformat(),
                 "movie": {
-                    "tmdb_id": savedMovie.movie.tmdb_id,
                     "title": savedMovie.movie.title,
                     "year": savedMovie.movie.year,
                     "movie_poster_url": savedMovie.movie.movie_poster_url,
+                    "description": savedMovie.movie.description,
                 },
             }
             for savedMovie in queryDatabase
@@ -167,19 +168,19 @@ def savedMovies(request):
 
         # Retrieve the fields from the request
         data = json.loads(request.body)
-        tmdb_id = data.get("tmdb_id")
         title = data.get("title")
         year = data.get("year")
+        tmdb_id = data.get("tmdb_id")
         movie_poster_url = data.get("movie_poster_url")
+        description = data.get("description")
 
         if not tmdb_id or not title or not year or not movie_poster_url:
             return JsonResponse({"detail": "You are missing some fields! Check again!"}, status=400)
         
         # Check if the movie already exists in the database
         movie, _ = Movie.objects.get_or_create(
-
-            tmdb_id = tmdb_id,
-            defaults={"title": title, "year": year, "movie_poster_url": movie_poster_url}
+            tmdb_id = tmdb_id, # How we are going to find if the movie exists already
+            defaults={"title": title, "year": year, "movie_poster_url": movie_poster_url, "description": description}
         )
         
         savedMovie, createdMovie = SavedMovies.objects.get_or_create(user=user, movie=movie)
@@ -192,7 +193,8 @@ def savedMovies(request):
             "movie": {
                 "tmdb_id": savedMovie.movie.tmdb_id,
                 "title": savedMovie.movie.title,
-                "year": savedMovie
+                "year": savedMovie.movie.year,
+                "description": savedMovie.movie.description,
             },
         },
         status=201 if createdMovie else 200
@@ -207,13 +209,15 @@ def savedMovies(request):
 #########################################################
 
 # Set the csrf cookie
-@require_GET
+# @ensure_csrf_cookie
+@require_GET # For session based CSRF
 def csrfTokenView(request):
     print("CSRF TOKEN!!!!")
     token = get_token(request)
     return JsonResponse({'csrfToken': token})
+    # return JsonResponse({'detail': 'CSRF cookie set'})
 
-@csrf_exempt
+@csrf_protect
 def userLogin(request):
     if request.method != "POST":
         return JsonResponse({"detail": "POST Method only "}, status=405)
@@ -231,26 +235,54 @@ def userLogin(request):
         return JsonResponse({"detail": "Invalid credentials"}, status=401)
     
     login(request, user)
+    rotate_token(request)
+    
 
     print(f"User {user.username} Is logged in!")
-    return JsonResponse({"detail": "Login success!!!"})
+    return JsonResponse({"detail": "Login success!!!",
+                         "csrfToken": get_token(request)
+                         })
+
+@csrf_exempt
+def verifyUser(request):
+    if request.method != "POST":
+        return JsonResponse({"detail": "POST Method only "}, status=405)
+    
+    data = json.loads(request.body)
+
+    # Authenticate the users credentials in the database
+    user = authenticate(
+        request,
+        username = data.get("username"),
+        password = data.get("password"),
+    )
+
+    if user is None:
+        return JsonResponse({"detail": "Invalid credentials"}, status=401)
+    
+
+    print(f"User {user.username} Is logged in!")
+    return JsonResponse({"detail": "Login success!!!",
+                         "username": user.username,
+                         "email": user.email,
+                         })
 
 
 # Registers the user
 # 5/hour if somehow the user made a mistake in registering
 # the first time
-@require_http_methods(["OPTIONS", "POST"])
+# @csrf_protect
 @ratelimit(key='ip', rate='3/h', block=False)
 def userRegister(request):
 
-    if getattr(request, "limited", False):
-        return JsonResponse(
-                {'detail': 'Too many requests sent!'},
-                status=429
-            ) 
+    #if getattr(request, "limited", False):
+    #    return JsonResponse(
+    #            {'detail': 'Too many requests sent!'},
+    #            status=429
+    #        ) 
 
     if request.method != "POST":
-        return JsonResponse({"detail": "POST method only"}, status=405)
+        return JsonResponse({"detail": "POST Method only "}, status=405)
 
     # Process incoming json response
     data = json.loads(request.body)
@@ -269,7 +301,8 @@ def userRegister(request):
         email = email,
         password=password # Already hashed by django here!
     )
-    return JsonResponse({"detail": "Successfully registered!"}, status=201)
+
+    return JsonResponse({"detail": "Successfully Registered!"}, status=201)
 
 
 

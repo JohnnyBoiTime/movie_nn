@@ -19,14 +19,16 @@ export interface User {
     email: string;
 }
 
+
 /********************************
  * API calls
  ********************************/
 export async function registerUser(data: Registration) {
 
     try {
-
+        console.log("Before response");
     const response = await csrfRoute.post('/register/', data);
+    console.log("After response");
 
     return response;
 
@@ -48,14 +50,20 @@ export async function registerUser(data: Registration) {
 
 export async function loginUser(data: Login) {
 
-    const response = await djangoRoute.post('/login/', data);
+    const response = await csrfRoute.post('/login/', data);
+
+    return response;
+}
+
+export async function verifyUser(data: Login) {
+    const response = await djangoRoute.post('/verifyUser/', data);
 
     return response;
 }
 
 export async function fetchLoggedinUser() {
 
-     const response = await djangoRoute.post('/user/');
+     const response = await djangoRoute.get('/user/');
 
     return response;
 }

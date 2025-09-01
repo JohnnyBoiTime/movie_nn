@@ -4,7 +4,6 @@ import { createApi, fetchBaseQuery, type BaseQueryFn, type FetchArgs, type Fetch
 
 /**
  * 
- *   tmdb_id = models.PositiveIntegerField(unique=True, db_index=True)
     title = models.CharField(max_length=90)
     year = models.PositiveIntegerField(null=True, blank=True)
     movie_poster_url = models.URLField(null=True, blank=True)
@@ -13,24 +12,27 @@ import { createApi, fetchBaseQuery, type BaseQueryFn, type FetchArgs, type Fetch
 
 
 // Form of movie that is saved
-type Movie = {
-    tmdb_id: number,
+type MovieFormat = {
     title: string,
-    year: string,
+    year: number,
     movie_poster_url: string,
+    description: string,
 };
 
-// Form of saving movie
+// Form of saved movie returned from the backend
 type SavedMovie = {
     id: number,
+    tmdb_id: number,
     added_at: string,
-    movie: Movie,
+    movie: MovieFormat,
 }
+
+
 
 
 // Helper function to fetch csrf token for the session
 const getCsrfToken = async () => {
-    const result = await fetch(`${process.env.NEXT_PUBLIC_DJANGO_API_ROUTE}/csrf/`, {
+    const result = await fetch(`${process.env.NEXT_PUBLIC_DJANGO_API_ROUTE}csrf/`, {
         credentials: "include",
     });
     if (!result.ok) {
@@ -58,14 +60,14 @@ export const savedMoviesapi = createApi({
             }),
             providesTags: (result) => 
                         result 
-                        ? ['SavedMovies', ...result.map((r: SavedMovie) => ({type: 'SavedMovies' as const, id: r.movie.tmdb_id}))]
+                        ? ['SavedMovies', ...result.map((r: SavedMovie) => ({type: 'SavedMovies' as const, id: r.id}))]
                         : ['SavedMovies'],
             }),
             
             // Adds a movie, so "mutates" the slice based on database change
-            // Movie = payload format sent in post
-            // SavedMovie = format returned
-            addSavedMovie: builder.mutation<SavedMovie, Movie>({
+            // SavedMovie = payload format sent in post
+            // MovieFormat = format returned
+            addSavedMovie: builder.mutation<SavedMovie, MovieFormat>({
                 async queryFn(movie, queryApi, extraOptions, baseQuery) {
                     try {
                         const csrfToken = await getCsrfToken();

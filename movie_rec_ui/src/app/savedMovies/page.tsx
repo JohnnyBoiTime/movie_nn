@@ -21,15 +21,17 @@ export default function SavedMovies() {
     <div>
       SavedMovies:
       <div>
-
         <ul>
           {movies.map((movie) => (
             <li key={movie.id}>
               <div>
-                {movie.movie.title} ({movie.movie.year})
+                {movie.movie.title} ({movie.movie.year}) Saved: {new Date(movie.added_at).toLocaleDateString()}
               </div>
               <div>
                  <Image src={movie.movie.movie_poster_url} width={200} height={200} alt="Movie" />
+              </div>
+              <div>
+                Description: {movie.movie.description}
               </div>
             </li>
           ))}

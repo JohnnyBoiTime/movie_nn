@@ -1,4 +1,4 @@
-import { loginUser } from "@/app/services/user"
+import { verifyUser } from "@/app/services/user"
 import CredentialsProvider from "next-auth/providers/credentials"
 
 // Configure auth
@@ -25,7 +25,7 @@ export const authOptions = {
                     try {
                     
                         // Login the user by seeing if it exists in the database
-                    await loginUser({
+                    await verifyUser({
                         username: credentials.username,
                         password: credentials.password,
                     })

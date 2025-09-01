@@ -40,29 +40,35 @@ TMDB_SEARCH_URL = 'https://api.themoviedb.org/3/search/movie'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-# For SECURE_SSL_REDIRECT
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# # For SECURE_SSL_REDIRECT
+# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# 
+# # Security stuff
+# note: FOR SECURE_SSL_REDIRECT, IF YOU RUN IT LOCALLY ONCE,
+# YOU WILL HAVE TO CLEAR BROWSER CACHE AND HISTORY
+# TO SET IT BACK TO HTTP!
+# SECURE_SSL_REDIRECT = False # False for dev 
 
-# Security stuff
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-
-# CSRF COOKIE STUFF
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = "None"
-SESSION_COOKIE_SAMESITE = "None"
-SECURE_HSTS_SECONDS = 86400
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-
-CSRF_USE_SESSIONS = True
+## 
+## # CSRF STUFF
+CSRF_COOKIE_SECURE = True # Set to true in prod
+CSRF_COOKIE_SAMESITE = "none" # Set to none in prod
+SESSION_COOKIE_SAMESITE = "none" # set to none in prod
+CSRF_USE_SESSIONS = True 
+SESSION_COOKIE_SECURE = True # Set to true in prod
+# SECURE_HSTS_SECONDS = 86400
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
+# 
 
 
 ALLOWED_HOSTS = [
-    DJANGO_HOST,
-    "movie-nn.vercel.app",
+    # DJANGO_HOST,
+    "127.0.0.1",
+    "localhost",
+    # "movie-nn.vercel.app",
 ]
 
 # Application definition
@@ -93,19 +99,22 @@ MIDDLEWARE = [
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://movie-nn.vercel.app",
+    # "https://movie-nn.vercel.app",
+    "http://localhost:3000",
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://movie-nn.vercel.app",
+    #"https://movie-nn.vercel.app",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
 # Allow the token to be accepted
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    "x-csrftoken",
-]
+# CORS_ALLOW_HEADERS = list(default_headers) + [
+#     "x-csrftoken",
+# ]
 
 LOGGING = {
     "version": 1,
@@ -144,10 +153,13 @@ WSGI_APPLICATION = 'movieRecproj.wsgi.application'
 
 # This is so we can build the image successfully, 
 # then change to the real database on google cloud run
+# Powershell command to test connection: 
+# Test-NetConnection aws-1-us-east-2.pooler.supabase.com -Port 5432 
+# Test-NetConnection aws-1-us-east-2.pooler.supabase.com -Port 6543 
 if DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.parse(
-            DATABASE_URL,
+            os.environ["DATABASE_URL"],
             conn_max_age=60,
         ),
         'OPTIONS': {'sslmode': 'require'},

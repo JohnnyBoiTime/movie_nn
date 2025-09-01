@@ -4,6 +4,7 @@ import axios from "axios";
 // Format of the json response
 interface Movie {
   id: number,
+  tmdb_id: number,
   movie: string,
   yearOfRelease: string,
   description: string,

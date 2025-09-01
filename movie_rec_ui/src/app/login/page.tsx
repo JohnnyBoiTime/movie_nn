@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import {signIn} from "next-auth/react";
 import { useDispatch} from "react-redux";
 import {AppDispatch } from "../redux/store";
+import { loginUser } from "../services/user";
 import {setUsername} from "../redux/slices/profileSlice";
 
 export default function LoginPage() {
@@ -21,24 +22,29 @@ export default function LoginPage() {
 
         e.preventDefault();
 
-        // user exists in the database,
-        // now log them in using next-auth and
-        // create a session!
-             const response = await signIn("credentials", {
+        // Create a next_auth session! 
+             const nextAuthorize = await signIn("credentials", {
                 redirect: false,
                 username: form.username,
                 password: form.password,
             });
 
-            console.log("Response from login: ", response);
+
+            // Create a django session as well so we can have CSRF protection!
+            const djangoSession = await loginUser({
+                username: form.username,
+                password: form.password,
+            })
+
+            console.log("Response from login: ", nextAuthorize);
 
             // Session created and user logged in!
-            if (response?.ok){
+            if (nextAuthorize?.ok){
                 dispatch(setUsername(form.username));
                 router.replace("/");
             }
             else {
-                console.error("Could not create session: ", response);
+                console.error("Could not create session: ", nextAuthorize);
             }
     }
 

@@ -29,6 +29,7 @@ export const makeStore = configureStore({
     // without triggering warnings
     middleware: getDefaultMiddleware => 
         getDefaultMiddleware({ serializableCheck: false })
+        .concat(savedMoviesapi.middleware),
 })
 
 

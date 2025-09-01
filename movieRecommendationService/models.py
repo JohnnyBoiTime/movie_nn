@@ -5,10 +5,11 @@ from django.conf import settings
 
 # Format of movie
 class Movie(models.Model):
-    tmdb_id = models.PositiveIntegerField(unique=True, db_index=True)
+    tmdb_id = models.PositiveIntegerField(unique=True, db_index=True) # Unique id to prevent repeat saves
     title = models.CharField(max_length=90)
     year = models.PositiveIntegerField(null=True, blank=True)
     movie_poster_url = models.URLField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     added_at = models.DateTimeField(auto_now_add=True)
 
  # For creating the list of saved movies for the user

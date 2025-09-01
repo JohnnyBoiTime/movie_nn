@@ -8,32 +8,35 @@ import SubmissionForm, {Movies} from "../components/submitForm";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { savedMoviesapi, useAddSavedMovieMutation } from "../redux/slices/savedMoviesSlice";
+import { fetchLoggedinUser } from "../services/user";
 import { getRecommendations } from "../services/neuralNet";
 
 // Format of the json response
 interface Movie {
     id: number,
+    tmdb_id: number,
     movie: string,
     yearOfRelease: string,
     description: string,
     poster: string,
-    similarityScore: number
 };
 
+// Form of movie that is saved
 type MovieFormat = {
     tmdb_id: number,
     title: string,
-    year: string,
+    year: number,
     movie_poster_url: string,
+    description: string,
 };
 
-// orm of what is returned from server
-type SavedMovieFormat = {
+// Form of saving movie
+type SavedMovie = {
     id: number,
+    tmdb_id: number,
     added_at: string,
     movie: MovieFormat,
 }
-
 
 export default function RecommendationPage() {
 
@@ -81,9 +84,18 @@ export default function RecommendationPage() {
      }
   }
 
+  const verifyUser = async () => {
+    console.log("INSIDE")
+    const response = await fetchLoggedinUser();
+    console.log(response);
+  }
+
   // Sends movie to database to save it
   const handleSavingMovie = useCallback(async (saveMovie: MovieFormat) => {
     try {
+
+      console.log(saveMovie);
+
       await addSavedMovie(saveMovie).unwrap();
     }
     catch(error) {
@@ -116,6 +128,11 @@ export default function RecommendationPage() {
               callbackUrl: "/"
               })}> Sign Out 
             </button>
+            <div>
+              <button onClick={verifyUser}>
+                Verfify login
+              </button>
+              </div>
           </div>
           )}
         <SubmissionForm onSubmit={handleQuery} loading={loading}/>
@@ -132,13 +149,17 @@ export default function RecommendationPage() {
               {/* List out their recommendations */}
               {Array.isArray(results) && results.map((r: Movie) => (
                 <li key={r.id}>
-                  <strong>Movie: {r.movie} ({r.yearOfRelease}) {r.similarityScore}</strong>
+                  <strong>Movie: {r.movie} ({r.yearOfRelease}) </strong>
                   <Image src={r.poster} width={200} height={200} alt="Movie" />
                   <div>
                     <strong>Description:</strong>
                     <div>
                       <strong>{r.description}  </strong>
                     </div>
+                    <button onClick={() => handleSavingMovie({tmdb_id: r.tmdb_id, title: r.movie, year: Number(r.yearOfRelease), movie_poster_url: r.poster, description: r.description})}>
+                      Save Movie
+                    </button>
+                      
                   </div>
                   <br />
                 </li>
