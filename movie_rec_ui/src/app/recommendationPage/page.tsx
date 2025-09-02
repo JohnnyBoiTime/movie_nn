@@ -91,7 +91,7 @@ export default function RecommendationPage() {
       await addSavedMovie(saveMovie).unwrap();
     }
     catch(error) {
-      console.error("Could not save the movie!");
+      console.error("Could not save the movie!:", error);
     }
   }, [addSavedMovie]);
 
