@@ -65,7 +65,7 @@ SECURE_HSTS_PRELOAD = True
 
 
 ALLOWED_HOSTS = [
-    # DJANGO_HOST,
+    DJANGO_HOST,
     # "127.0.0.1",
     # "localhost",
     "movie-nn.vercel.app",
