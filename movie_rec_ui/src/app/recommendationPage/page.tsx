@@ -102,11 +102,17 @@ export default function RecommendationPage() {
           <div>
             User: {user.username}
           </div>
-          <div>
-            <Link href='/savedMovies' style={{textDecoration: 'underline'}}>
-            Saved Movies
-            </Link>
+          {user.username === 'Guest' ? (
+            <div>
+              Log in to save movies!
+            </div>
+          ) : (
+            <div>
+             <Link href='/savedMovies' style={{textDecoration: 'underline'}}>
+             Saved Movies
+              </Link>
           </div>
+          )}
         </div>
           {user.username === 'Guest' ? (
           <div>        
@@ -148,7 +154,7 @@ export default function RecommendationPage() {
                     <div>
                       <strong>{r.description}  </strong>
                     </div>
-                    { user.username === 'Guest' ? (
+                    {user.username === 'Guest' ? (
                       <div>
                         Log in to save movies
                       </div>
