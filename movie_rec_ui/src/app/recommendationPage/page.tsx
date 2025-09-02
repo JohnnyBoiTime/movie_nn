@@ -148,9 +148,18 @@ export default function RecommendationPage() {
                     <div>
                       <strong>{r.description}  </strong>
                     </div>
-                    <button onClick={() => handleSavingMovie({tmdb_id: r.tmdb_id, title: r.movie, year: Number(r.yearOfRelease), movie_poster_url: r.poster, description: r.description})}>
+                    { user.username === "Guest" ? (
+                      <div>
+                        Log in to save movies
+                      </div>
+                    ) : (
+                      <div>
+                      <button onClick={() => handleSavingMovie({tmdb_id: r.tmdb_id, title: r.movie, year: Number(r.yearOfRelease), movie_poster_url: r.poster, description: r.description})}>
                       Save Movie
                     </button>
+                    </div>
+                    )}
+
                       
                   </div>
                   <br />
