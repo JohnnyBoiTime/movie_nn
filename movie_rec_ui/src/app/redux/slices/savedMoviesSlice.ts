@@ -32,7 +32,7 @@ type SavedMovie = {
 
 // Helper function to fetch csrf token for the session
 const getCsrfToken = async () => {
-    const result = await fetch(`${process.env.NEXT_PUBLIC_DJANGO_API_ROUTE}csrf/`, {
+    const result = await fetch(`${process.env.NEXT_PUBLIC_DJANGO_API_ROUTE}/csrf/`, {
         credentials: "include",
     });
     if (!result.ok) {
