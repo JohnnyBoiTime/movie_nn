@@ -2,10 +2,12 @@
 
 import React from 'react'
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useGetSavedMoviesQuery } from '../redux/slices/savedMoviesSlice';
 
 export default function SavedMovies() {
   const {data} = useGetSavedMoviesQuery();
+  const router = useRouter();
 
   const movies = data ? data : [];
 
@@ -17,8 +19,18 @@ export default function SavedMovies() {
     )
   }
 
+  const backToRecommendationPage = () => {
+    router.push("/recommendationPage");
+  }
+  
+
   return (
     <div>
+      <div>
+        <button onClick={backToRecommendationPage}>
+          Back to recommendation page
+        </button>
+      </div>
       SavedMovies:
       <div>
         <ul>
