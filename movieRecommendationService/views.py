@@ -217,7 +217,6 @@ def csrfTokenView(request):
     return JsonResponse({'csrfToken': token})
     # return JsonResponse({'detail': 'CSRF cookie set'})
 
-@csrf_protect
 def userLogin(request):
     if request.method != "POST":
         return JsonResponse({"detail": "POST Method only "}, status=405)

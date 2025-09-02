@@ -40,16 +40,16 @@ TMDB_SEARCH_URL = 'https://api.themoviedb.org/3/search/movie'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # # For SECURE_SSL_REDIRECT
-# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # 
 # # Security stuff
 # note: FOR SECURE_SSL_REDIRECT, IF YOU RUN IT LOCALLY ONCE,
 # YOU WILL HAVE TO CLEAR BROWSER CACHE AND HISTORY
 # TO SET IT BACK TO HTTP!
-# SECURE_SSL_REDIRECT = False # False for dev 
+SECURE_SSL_REDIRECT = True # False for dev 
 
 ## 
 ## # CSRF STUFF
@@ -58,17 +58,17 @@ CSRF_COOKIE_SAMESITE = "none" # Set to none in prod
 SESSION_COOKIE_SAMESITE = "none" # set to none in prod
 CSRF_USE_SESSIONS = True 
 SESSION_COOKIE_SECURE = True # Set to true in prod
-# SECURE_HSTS_SECONDS = 86400
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_SECONDS = 86400
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 # 
 
 
 ALLOWED_HOSTS = [
     # DJANGO_HOST,
-    "127.0.0.1",
-    "localhost",
-    # "movie-nn.vercel.app",
+    # "127.0.0.1",
+    # "localhost",
+    "movie-nn.vercel.app",
 ]
 
 # Application definition
@@ -99,14 +99,14 @@ MIDDLEWARE = [
 
 
 CSRF_TRUSTED_ORIGINS = [
-    # "https://movie-nn.vercel.app",
-    "http://localhost:3000",
+    "https://movie-nn.vercel.app",
+    #"http://localhost:3000",
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    #"https://movie-nn.vercel.app",
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
+    "https://movie-nn.vercel.app",
+    #"http://127.0.0.1:3000",
+    #"http://localhost:3000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
