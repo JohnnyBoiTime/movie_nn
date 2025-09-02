@@ -148,7 +148,7 @@ export default function RecommendationPage() {
                     <div>
                       <strong>{r.description}  </strong>
                     </div>
-                    { user.username === "Guest" ? (
+                    { user.username === 'Guest' ? (
                       <div>
                         Log in to save movies
                       </div>
