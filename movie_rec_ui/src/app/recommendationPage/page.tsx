@@ -7,7 +7,7 @@ import Image from "next/image";
 import SubmissionForm, {Movies} from "../components/submitForm";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { savedMoviesapi, useAddSavedMovieMutation } from "../redux/slices/savedMoviesSlice";
+import { useAddSavedMovieMutation } from "../redux/slices/savedMoviesSlice";
 import { fetchLoggedinUser } from "../services/user";
 import { getRecommendations } from "../services/neuralNet";
 
@@ -29,14 +29,6 @@ type MovieFormat = {
     movie_poster_url: string,
     description: string,
 };
-
-// Form of saving movie
-type SavedMovie = {
-    id: number,
-    tmdb_id: number,
-    added_at: string,
-    movie: MovieFormat,
-}
 
 export default function RecommendationPage() {
 

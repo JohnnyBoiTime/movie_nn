@@ -31,7 +31,7 @@ export default function LoginPage() {
 
 
             // Create a django session as well so we can have CSRF protection!
-            const djangoSession = await loginUser({
+            await loginUser({
                 username: form.username,
                 password: form.password,
             })

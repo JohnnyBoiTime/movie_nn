@@ -56,3 +56,10 @@ USER appuser
 # Start django app and bind interface to 8080, will change to something
 # else later. sh -c expands the port
 CMD ["sh", "-c", "exec gunicorn movieRecproj.wsgi:application --bind 0.0.0.0:$PORT"]
+
+# To build:
+# Go to the parent folder (movie_nn)
+# run docker build -t gcr.io/movie-rec-proj/movie-rec-backend:latest .
+
+# To deploy to google artifact:
+# docker push gcr.io/movie-rec-prof/movie-rec-backend:latest
