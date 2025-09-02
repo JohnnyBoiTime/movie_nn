@@ -1,6 +1,6 @@
 // https://www.freecodecamp.org/news/how-to-integrate-rtk-query-with-redux-toolkit
 
-import { createApi, fetchBaseQuery, type BaseQueryFn, type FetchArgs, type FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, type FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 
 /**
  * 
