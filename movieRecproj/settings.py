@@ -49,7 +49,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # note: FOR SECURE_SSL_REDIRECT, IF YOU RUN IT LOCALLY ONCE,
 # YOU WILL HAVE TO CLEAR BROWSER CACHE AND HISTORY
 # TO SET IT BACK TO HTTP!
-SECURE_SSL_REDIRECT = True # False for dev 
+SECURE_SSL_REDIRECT = False # False for dev 
 
 ## 
 ## # CSRF STUFF
@@ -61,7 +61,7 @@ SESSION_COOKIE_SECURE = True # Set to true in prod
 SECURE_HSTS_SECONDS = 86400
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
-# 
+
 
 
 ALLOWED_HOSTS = [
@@ -105,8 +105,8 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://movie-nn.vercel.app",
-    #"http://127.0.0.1:3000",
-    #"http://localhost:3000",
+    # "http://127.0.0.1:3000",
+    # "http://localhost:3000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

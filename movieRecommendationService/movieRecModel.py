@@ -86,8 +86,10 @@ def recommendationSystemTest(movieTitle, movieYear, k=5):
     calcSimilarity = F.cosine_similarity(queryVector, movieEmbedds.to(device))
 
     # Because the similarity is between 0 and 1, -1 makes it so
-    # it cannot appear
-    calcSimilarity[index] = -1.0 # Don't recommend the same movie.
+    # the searched movie cannot appear
+    # Comment out to make the movie appear, 
+    # Uncomment to make the movie not appear
+    # calcSimilarity[index] = -1.0 # Don't recommend the same movie.
 
     # Grab the one hot genre vector corresponding to
     # corresponding to the chosen movie 
@@ -103,15 +105,10 @@ def recommendationSystemTest(movieTitle, movieYear, k=5):
     # the same genres as the chosen movie
     sharedMasking = overlappingGenres > 2
 
-    # Don't recommend the movie to itself
-    sharedMasking[index] = False
-
     # Filter out movies that do not share the genres if the
     # chosen movie
 
-    # ~sharedMasking -> element wise logical NOT,
-    # so selects where ~sharedMasking is true
-    # -1.0 means do not recommend those. 
+    # Makes it so we ignore all movies with less than 2 genres!
     calcSimilarity[~sharedMasking] = -1.0
 
     # Get the top k movies

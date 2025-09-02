@@ -49,8 +49,13 @@ export default function RecommendationPage() {
     setLoading(true)
     setResults(null)
 
+    // k + 1 because the user asks for 5 recommended movies.
+    // Since we include the current queried movie, we do 
+    // k + 1 to have their 5 recommended movies based on their
+    // query
+    const recommendedMovies = k + 1;
      
-     const response: Movie[] | number | undefined = await getRecommendations(title.trim().toLowerCase(), year, k);
+     const response: Movie[] | number | undefined = await getRecommendations(title.trim().toLowerCase(), year, recommendedMovies);
      
 
      console.log(response);
@@ -71,7 +76,6 @@ export default function RecommendationPage() {
 
      else {
         setResults(response);
-        setMessage("Top Movies: ")
         setLoading(false);
      }
   }
@@ -143,7 +147,6 @@ export default function RecommendationPage() {
               </p>
           ) : ( 
             <ul>
-              {message}
               {/* List out their recommendations */}
               {Array.isArray(results) && results.map((r: Movie) => (
                 <li key={r.id}>
