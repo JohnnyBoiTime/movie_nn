@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { useAddSavedMovieMutation } from "../redux/slices/savedMoviesSlice";
 import { useAddWatchedMovieMutation } from "../redux/slices/watchedList";
-import { fetchLoggedinUser } from "../services/user";
 import { getRecommendations } from "../services/neuralNet";
 
 // Format of the json response
