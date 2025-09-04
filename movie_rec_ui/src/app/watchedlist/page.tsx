@@ -37,7 +37,7 @@ export default function WatchedMovies() {
           Back to recommendation page
         </button>
       </div>
-      WatchedMovies:
+      Watched list:
       <div>
         <ul>
           {movies.map((movie) => (
