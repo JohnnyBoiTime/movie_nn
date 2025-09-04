@@ -148,6 +148,7 @@ export default function RecommendationPage() {
               </p>
           ) : ( 
             <ul>
+              {message}
               {/* List out their recommendations */}
               {Array.isArray(results) && results.map((r: Movie) => (
                 <li key={r.id}>
