@@ -20,6 +20,9 @@ movies = pd.read_csv(os.path.join(rawDataDirectory, "movies.csv"))
 
 movieDF = pd.read_csv(os.path.join(projectRoot, "data", "processed", "processedMovies.csv"))
 
+genres = ["Action", "Adventure", "Animation", "Children", "Comedy", "Crime", "Documentary", "Drama", "Fantasy", "Film-Noir", "Horror", "IMAX", "Musical", "Mystery", "Romance", "Sci-Fi", "Thriller", "War", "Western"]
+
+
 # Make it so user can simply type a string to get similar movies
 movieIdToTitle = dict(zip(movieDF.movieId, movieDF.title))
 titleToMovieId = dict(zip(movieDF.title, movieDF.movieId))
@@ -68,8 +71,10 @@ movieEmbedds = F.normalize(movieEmbedds, dim=1)
 
 # Test the model. (0.5-0.7 is a great range and indicates
 # good similarity)
-def recommendationSystemTest(movieTitle, movieYear, k=5):
+def recommendationSystemTest(movieTitle, movieYear, numGenres=1, k=5):
     query = movieTitle + ' (' + movieYear + ')'
+
+    
 
     # Make sure movie title is valid!
     if query not in titleToMovieId:
@@ -96,6 +101,14 @@ def recommendationSystemTest(movieTitle, movieYear, k=5):
     # Shape = [genre]
     genreQuery = genreTensor[index]
 
+    # How many genres the queried movie has
+    numOfMoviesGenre = (genreQuery == 1).sum().item()
+
+    for i in range (len(genres)):
+        if (genreQuery[i] == 1):
+            print(genres[i - 1])
+        
+
     # Find out how many movies have the same genres as the chosen movie.
     # 1 * 1 = 1 -> genre exists
     # 1 * 0 = 0 and 0 * 1 = 0 -> genre does not exist
@@ -103,7 +116,9 @@ def recommendationSystemTest(movieTitle, movieYear, k=5):
 
     # Build mask that exists if a movie is found that has
     # the same genres as the chosen movie
-    sharedMasking = overlappingGenres > 2
+    # TEST LATER WITH DIFFERENT NUMBER OF GENRES
+    # BELOW 2!
+    sharedMasking = overlappingGenres >= numGenres
 
     # Filter out movies that do not share the genres if the
     # chosen movie
@@ -115,7 +130,7 @@ def recommendationSystemTest(movieTitle, movieYear, k=5):
     topKValues, topKIndexes = torch.topk(calcSimilarity, k)
 
     # We found the similar movies
-    return [( movieIdToTitle.get(indexToMovie[index.item()]), topKValues[j].item())
+    return [( movieIdToTitle.get(indexToMovie[index.item()]), topKValues[j].item(), numOfMoviesGenre)
         for j, index in enumerate(topKIndexes)]
 
 

@@ -13,13 +13,13 @@ interface Movie {
 };
 
 // Gets the recommendations from the neural network
-export async function getRecommendations(title: string, year: string, k: number){
+export async function getRecommendations(title: string, year: string, numGenres: number, k: number){
 
     try {
 
         const response = await djangoRoute.get<Movie[] | null>("/movieRecommendationService/",
                 {
-                params: {title, year, k}
+                params: {title, year, numGenres, k}
                 }
             );  
     

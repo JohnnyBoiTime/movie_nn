@@ -45,7 +45,7 @@ export default function RecommendationPage() {
 
   // Send form results to the model and retrieve 
   // similar movies
-  const handleQuery = async ({title, year, k}: Movies) => {
+  const handleQuery = async ({title, year, numGenres, k}: Movies) => {
     setLoading(true)
     setResults(null)
 
@@ -55,8 +55,9 @@ export default function RecommendationPage() {
     // query
     const recommendedMovies = k + 1;
      
-     const response: Movie[] | number | undefined = await getRecommendations(title.trim().toLowerCase(), year, recommendedMovies);
+     const response: Movie[] | number | undefined = await getRecommendations(title.trim().toLowerCase(), year, numGenres, recommendedMovies);
      
+     console.log(numGenres)
 
      console.log(response);
 
@@ -143,7 +144,7 @@ export default function RecommendationPage() {
           {results === null && loading === false ? (
               <p>Press enter to query, top movies will show here. Some movies may not exist in the system, and some movies may not have
                 enough worthy recommendations to show, so shown results may be less than amount chosen 
-                to recommend
+                to recommend.
               </p>
           ) : ( 
             <ul>

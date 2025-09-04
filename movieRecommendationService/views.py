@@ -41,12 +41,13 @@ class RecommendationView(APIView):
 
         movieTitle = request.query_params.get('title')
         movieYear = request.query_params.get('year')
+        numGenres = int(request.query_params.get('numGenres', 1))
         k = int(request.query_params.get('k', 5))
-        recommendation = recommendationSystemTest(movieTitle, movieYear, k)
+        recommendation = recommendationSystemTest(movieTitle, movieYear, numGenres, k)
 
         data = []
 
-        for index, (movie, score) in enumerate(recommendation, start=1):
+        for index, (movie, score, moviesGenres) in enumerate(recommendation, start=1):
 
             # Split only on the last paranthesis to
             # ignore paranthesis before the year. 

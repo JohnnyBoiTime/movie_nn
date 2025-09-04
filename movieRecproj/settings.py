@@ -100,7 +100,7 @@ MIDDLEWARE = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://movie-nn.vercel.app",
-    #"http://localhost:3000",
+    # "http://localhost:3000",
 ]
 
 CORS_ALLOWED_ORIGINS = [

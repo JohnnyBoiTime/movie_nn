@@ -5,6 +5,7 @@ import {FormEvent, useState} from 'react';
 export interface Movies {
     title: string,
     year: string,
+    numGenres: number,
     k: number
 };
 
@@ -24,10 +25,11 @@ export default function SubmissionForm({
     const [title, setMovieTitle] = useState('');
     const [year, setMovieYear] = useState('');
     const [k, setK] = useState(5);
+    const [numGenres, setNumGenres] = useState(1);
 
     const handleSubmission = (e: FormEvent) => {
         e.preventDefault();
-        onSubmit({title, year, k});
+        onSubmit({title, year, numGenres, k});
     };
 
     // Very basic submission form
@@ -61,6 +63,21 @@ export default function SubmissionForm({
                         required
                     />
                 </label>
+            </div>
+            <div>
+                <label>
+                    Number of similar genres: &nbsp;
+                    <input 
+                        className="border w-10 justify-center content-center text-center"
+                        name="title"
+                        type="number"
+                        min={1}
+                        max={4}
+                        value={numGenres}
+                        onChange={(e) => setNumGenres(Number(e.target.value))}
+                        required
+                    />
+                </label>   
             </div>
             <div>
                 <label>
