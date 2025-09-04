@@ -1,7 +1,6 @@
 import axios from 'axios';
 
     const API_BASE = process.env.NEXT_PUBLIC_BASE_ROUTE; // prod
-    // const API_BASE = `http://127.0.0.1:8000/api`; // dev
 
 // Axios for pre-csrf
 const preCSRFF = axios.create({
