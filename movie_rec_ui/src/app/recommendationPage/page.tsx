@@ -83,12 +83,6 @@ export default function RecommendationPage() {
      }
   }
 
-  const verifyUser = async () => {
-    console.log("INSIDE")
-    const response = await fetchLoggedinUser();
-    console.log(response);
-  }
-
   // Saves users movie to a to-watch list
   const handleSavingMovie = useCallback(async (saveMovie: MovieFormat) => {
     try {
