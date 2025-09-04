@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
-from .models import Movie, SavedMovies
+from .models import Movie, WatchedMovie, SavedMovies, WatchedMovies
 import json
 import time
 import requests
@@ -185,6 +185,74 @@ def savedMovies(request):
         )
         
         savedMovie, createdMovie = SavedMovies.objects.get_or_create(user=user, movie=movie)
+
+            # Return the movie we saved to confirm we saved it
+        return JsonResponse(
+            {
+            "id": savedMovie.id,
+            "added_at": savedMovie.added_at.isoformat(),
+            "movie": {
+                "tmdb_id": savedMovie.movie.tmdb_id,
+                "title": savedMovie.movie.title,
+                "year": savedMovie.movie.year,
+                "description": savedMovie.movie.description,
+            },
+        },
+        status=201 if createdMovie else 200
+        )
+    
+    return JsonResponse({"detail": "Worked"})
+
+# For getting the users watched movies and putting a watched movie in
+def watchedMovies(request):
+    user = request.user
+
+    if not user.is_authenticated:
+        return JsonResponse({"detail": "Unauthenticated user"}, status=401)
+
+    # Get the users saved movies
+    if request.method == 'GET':
+        queryDatabase = (WatchedMovies.objects
+                         .select_related('movie')
+                         .filter(user=user)
+                         .order_by('-added_at'))
+        # Users saved movies
+        data = [
+            {
+                "id": savedMovie.id,
+                "added_at": savedMovie.added_at.isoformat(),
+                "movie": {
+                    "title": savedMovie.movie.title,
+                    "year": savedMovie.movie.year,
+                    "movie_poster_url": savedMovie.movie.movie_poster_url,
+                    "description": savedMovie.movie.description,
+                },
+            }
+            for savedMovie in queryDatabase
+        ]
+        return JsonResponse(data, safe=False)
+    
+    # User saves a movie
+    if request.method == "POST":
+
+        # Retrieve the fields from the request
+        data = json.loads(request.body)
+        title = data.get("title")
+        year = data.get("year")
+        tmdb_id = data.get("tmdb_id")
+        movie_poster_url = data.get("movie_poster_url")
+        description = data.get("description")
+
+        if not tmdb_id or not title or not year or not movie_poster_url:
+            return JsonResponse({"detail": "You are missing some fields! Check again!"}, status=400)
+        
+        # Check if the movie already exists in the database
+        movie, _ = WatchedMovie.objects.get_or_create(
+            tmdb_id = tmdb_id, # How we are going to find if the movie exists already
+            defaults={"title": title, "year": year, "movie_poster_url": movie_poster_url, "description": description}
+        )
+        
+        savedMovie, createdMovie = WatchedMovies.objects.get_or_create(user=user, movie=movie)
 
             # Return the movie we saved to confirm we saved it
         return JsonResponse(

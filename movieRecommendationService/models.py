@@ -12,6 +12,15 @@ class Movie(models.Model):
     description = models.TextField(null=True, blank=True)
     added_at = models.DateTimeField(auto_now_add=True)
 
+# Format of watched movie, pretty much the same as above
+class WatchedMovie(models.Model):
+    tmdb_id = models.PositiveIntegerField(unique=True, db_index=True) # Unique id to prevent repeat saves
+    title = models.CharField(max_length=90)
+    year = models.PositiveIntegerField(null=True, blank=True)
+    movie_poster_url = models.URLField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
+    added_at = models.DateTimeField(auto_now_add=True)
+
  # For creating the list of saved movies for the user
 class SavedMovies(models.Model):
     # Seeing what specific movies a user has saved
@@ -28,4 +37,19 @@ class SavedMovies(models.Model):
         ]
         indexes = [models.Index(fields=["user", "added_at"])]
 
+# For creating a list of already watched movies
+class WatchedMovies(models.Model):
+    # Seeing what specific movies a user has saved
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='watched_movies')
+
+    # For seeing how popular a movie is (Could be a cool mnetric)
+    movie = models.ForeignKey(WatchedMovie, on_delete=models.CASCADE, related_name='watched_by') 
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    # Options 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["user", "movie"], name="unique_user_movies_watched"),
+        ]
+        indexes = [models.Index(fields=["user", "added_at"])]
 

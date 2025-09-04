@@ -43,7 +43,7 @@ TMDB_SEARCH_URL = 'https://api.themoviedb.org/3/search/movie'
 DEBUG = False
 
 # # For SECURE_SSL_REDIRECT
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # 
 # # Security stuff
 # note: FOR SECURE_SSL_REDIRECT, IF YOU RUN IT LOCALLY ONCE,
@@ -105,8 +105,8 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://movie-nn.vercel.app",
-    # "http://127.0.0.1:3000",
-    # "http://localhost:3000",
+    #"http://127.0.0.1:3000",
+    #"http://localhost:3000",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

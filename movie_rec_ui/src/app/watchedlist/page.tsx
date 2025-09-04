@@ -3,22 +3,22 @@
 import React from 'react'
 import Image from 'next/image';
 import { useRouter } from "next/navigation";
-import { useGetSavedMoviesQuery } from '../redux/slices/savedMoviesSlice';
+import { useGetWatchedMoviesQuery } from '../redux/slices/watchedList';
 
-export default function SavedMovies() {
-  const {data} = useGetSavedMoviesQuery();
+export default function WatchedMovies() {
+  const {data} = useGetWatchedMoviesQuery();
   const router = useRouter();
 
   const movies = data ? data : [];
 
-    const backToRecommendationPage = () => {
+   const backToRecommendationPage = () => {
     router.push("/recommendationPage");
   }
 
   if (movies.length === 0) {
     return (
       <div>
-        <p> No saved movies</p>
+        <p> No watched movies</p>
         <div>
           <button onClick={backToRecommendationPage}>
             Back to recommendation page
@@ -37,7 +37,7 @@ export default function SavedMovies() {
           Back to recommendation page
         </button>
       </div>
-      SavedMovies:
+      WatchedMovies:
       <div>
         <ul>
           {movies.map((movie) => (

@@ -3,6 +3,7 @@ import {persistStore, persistReducer} from "redux-persist"
 import storage from "redux-persist/lib/storage" 
 import profileReducer from "./slices/profileSlice"
 import { savedMoviesapi } from "./slices/savedMoviesSlice";
+import { watchedMoviesApi } from "./slices/watchedList";
 
 const profilePersistConfig = {
     key: 'profile', // Store as profile
@@ -22,6 +23,7 @@ export const makeStore = configureStore({
     reducer: {
         profile: peristedProfileReducer,
         [savedMoviesapi.reducerPath]: savedMoviesapi.reducer,
+        [watchedMoviesApi.reducerPath]: watchedMoviesApi.reducer,
     },
 
     // redux-persist writes non-serializable data, so 
@@ -29,7 +31,7 @@ export const makeStore = configureStore({
     // without triggering warnings
     middleware: getDefaultMiddleware => 
         getDefaultMiddleware({ serializableCheck: false })
-        .concat(savedMoviesapi.middleware),
+        .concat(savedMoviesapi.middleware, watchedMoviesApi.middleware),
 })
 
 

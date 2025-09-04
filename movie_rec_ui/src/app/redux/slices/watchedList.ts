@@ -2,6 +2,15 @@
 
 import { createApi, fetchBaseQuery, type FetchBaseQueryError } from "@reduxjs/toolkit/query/react";
 
+/**
+ * 
+    title = models.CharField(max_length=90)
+    year = models.PositiveIntegerField(null=True, blank=True)
+    movie_poster_url = models.URLField(null=True, blank=True)
+    added_at = models.DateTimeField(auto_now_add=True)
+ */
+
+
 // Form of movie that is saved
 type MovieFormat = {
     title: string,
@@ -31,37 +40,37 @@ const getCsrfToken = async () => {
     return csrfToken as string;
 }
 
-export const savedMoviesapi = createApi({
-    reducerPath: "savedMovies",
+export const watchedMoviesApi = createApi({
+    reducerPath: "watchedMovies",
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.NEXT_PUBLIC_DJANGO_API_ROUTE,
         credentials: "include",// For sessionId cookies
     }),
 
     // https://redux-toolkit.js.org/rtk-query/usage/automated-refetching
-    tagTypes: ['SavedMovies'], // Caches results for fast retrieval, cache key based on timdb_id
+    tagTypes: ['WatchedMovies'], // Caches results for fast retrieval, cache key based on timdb_id
     // Endpoints to retrieve the users saved movies
     endpoints: (builder) => {
         return {
-            getSavedMovies: builder.query<SavedMovie[], void>({
+            getWatchedMovies: builder.query<SavedMovie[], void>({
                 query: () => ({
-                    url: "/savedMovies/",
+                    url: "/watchedMovies/",
             }),
             providesTags: (result) => 
                         result 
-                        ? ['SavedMovies', ...result.map((r: SavedMovie) => ({type: 'SavedMovies' as const, id: r.id}))]
-                        : ['SavedMovies'],
+                        ? ['WatchedMovies', ...result.map((r: SavedMovie) => ({type: 'WatchedMovies' as const, id: r.id}))]
+                        : ['WatchedMovies'],
             }),
             
             // Adds a movie, so "mutates" the slice based on database change
             // SavedMovie = payload format sent in post
             // MovieFormat = format returned
-            addSavedMovie: builder.mutation<SavedMovie, MovieFormat>({
+            addWatchedMovie: builder.mutation<SavedMovie, MovieFormat>({
                 async queryFn(movie, queryApi, extraOptions, baseQuery) {
                     try {
                         const csrfToken = await getCsrfToken();
                         const result = await baseQuery({
-                            url: "/savedMovies/",
+                            url: "/watchedMovies/",
                             method: "POST",
                             body: movie,
                             headers: {
@@ -81,7 +90,7 @@ export const savedMoviesapi = createApi({
                 },
                 // Dont need to cache the saved movies. Once saved,
                 // can forget
-                invalidatesTags: ['SavedMovies']
+                invalidatesTags: ['WatchedMovies']
 
             })
         }
@@ -89,4 +98,4 @@ export const savedMoviesapi = createApi({
 
 });
 
-export const {useGetSavedMoviesQuery, useAddSavedMovieMutation} = savedMoviesapi;
+export const {useGetWatchedMoviesQuery, useAddWatchedMovieMutation} = watchedMoviesApi;

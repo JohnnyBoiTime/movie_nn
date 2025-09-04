@@ -8,6 +8,7 @@ import SubmissionForm, {Movies} from "../components/submitForm";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { useAddSavedMovieMutation } from "../redux/slices/savedMoviesSlice";
+import { useAddWatchedMovieMutation } from "../redux/slices/watchedList";
 import { fetchLoggedinUser } from "../services/user";
 import { getRecommendations } from "../services/neuralNet";
 
@@ -33,6 +34,7 @@ type MovieFormat = {
 export default function RecommendationPage() {
 
   const [addSavedMovie] = useAddSavedMovieMutation();
+  const [addWatchedMovie] = useAddWatchedMovieMutation();
 
   const router = useRouter();
 
@@ -87,7 +89,7 @@ export default function RecommendationPage() {
     console.log(response);
   }
 
-  // Sends movie to database to save it
+  // Saves users movie to a to-watch list
   const handleSavingMovie = useCallback(async (saveMovie: MovieFormat) => {
     try {
 
@@ -99,6 +101,20 @@ export default function RecommendationPage() {
       console.error("Could not save the movie!:", error);
     }
   }, [addSavedMovie]);
+
+   // Saves users movie to an already-watched list
+  const handleWatchedMovie = useCallback(async (saveMovie: MovieFormat) => {
+    try {
+
+      console.log(saveMovie);
+
+      await addWatchedMovie(saveMovie).unwrap();
+    }
+    catch(error) {
+      console.error("Could not save the movie!:", error);
+    }
+  }, [addWatchedMovie]);
+
 
     return (
       // Show user the results of their query
@@ -113,9 +129,16 @@ export default function RecommendationPage() {
             </div>
           ) : (
             <div>
-             <Link href='/savedMovies' style={{textDecoration: 'underline'}}>
-             Saved Movies
-              </Link>
+              <div>
+                <Link href='/savedMovies' style={{textDecoration: 'underline'}}>
+                Saved Movies
+                </Link>
+              </div>
+              <div>
+                <Link href='/watchedlist' style={{textDecoration: 'underline'}}>
+                Watched Movies
+                </Link>
+              </div>
           </div>
           )}
         </div>
@@ -131,11 +154,6 @@ export default function RecommendationPage() {
               callbackUrl: "/"
               })}> Sign Out 
             </button>
-            <div>
-              <button onClick={verifyUser}>
-                Verfify login
-              </button>
-              </div>
           </div>
           )}
         <SubmissionForm onSubmit={handleQuery} loading={loading}/>
@@ -166,10 +184,17 @@ export default function RecommendationPage() {
                       </div>
                     ) : (
                       <div>
-                      <button onClick={() => handleSavingMovie({tmdb_id: r.tmdb_id, title: r.movie, year: Number(r.yearOfRelease), movie_poster_url: r.poster, description: r.description})}>
-                      Save Movie
-                    </button>
-                    </div>
+                        <div>
+                          <button onClick={() => handleSavingMovie({tmdb_id: r.tmdb_id, title: r.movie, year: Number(r.yearOfRelease), movie_poster_url: r.poster, description: r.description})}>
+                            Save Movie
+                          </button>
+                        </div>
+                        <div>
+                          <button onClick={() => handleWatchedMovie({tmdb_id: r.tmdb_id, title: r.movie, year: Number(r.yearOfRelease), movie_poster_url: r.poster, description: r.description})}>
+                            Add to watched list
+                          </button>
+                        </div>
+                      </div>
                     )}
 
                       
