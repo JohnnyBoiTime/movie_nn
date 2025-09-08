@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Movie-nn",
-  description: "Movie nerual network recommendation sevice",
+  description: "Movie neural network recommendation sevice",
   verification: {
-    google: "57pFdPPhd6mY0-iB"
+    google: "57pFdPPhd6mY0-iBjFC5ttjcnqzmDY_41rkSo7I5qXU"
   }
 };
 
