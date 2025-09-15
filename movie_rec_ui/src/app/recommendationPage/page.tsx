@@ -35,6 +35,8 @@ export default function RecommendationPage() {
   const [addSavedMovie] = useAddSavedMovieMutation();
   const [addWatchedMovie] = useAddWatchedMovieMutation();
 
+  
+
   const router = useRouter();
 
   // Store results and let user know if loading or not
@@ -108,7 +110,6 @@ export default function RecommendationPage() {
     }
   }, [addWatchedMovie]);
 
-
     return (
       // Show user the results of their query
       <div>
@@ -135,7 +136,7 @@ export default function RecommendationPage() {
           </div>
           )}
         </div>
-          {user.username === 'Guest' ? (
+          {user.username === 'Guest' || user.username === '' ? (
           <div>        
             <Link href="/login" style={{textDecoration: 'underline'}}>
               Go back to login

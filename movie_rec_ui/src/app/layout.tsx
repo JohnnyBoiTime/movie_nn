@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import StoreProvider from "./redux/StoreProvider";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,6 +20,8 @@ export const metadata: Metadata = {
     google: "57pFdPPhd6mY0-iBjFC5ttjcnqzmDY_41rkSo7I5qXU"
   }
 };
+
+
 
 export default function RootLayout({
   children,
