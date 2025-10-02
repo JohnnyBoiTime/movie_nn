@@ -3,12 +3,14 @@ from django.conf import settings
 
 # Create your models here.
 
+# To change a model/database table, run commands in this order:
+# python manage.py makemigrations -> makes migration files to tell django what to change in database
+# python manage.py migrate -> applies the changes to the database
+
 # Format of movie
 class Movie(models.Model):
     tmdb_id = models.PositiveIntegerField(unique=True, db_index=True) # Unique id to prevent repeat saves
     title = models.CharField(max_length=90)
-    # Allowing null and blank values are not necassary in this case,
-    # year, movie_poster_url, and description should all be required. 
     year = models.PositiveIntegerField(null=True, blank=True)
     movie_poster_url = models.URLField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
@@ -44,7 +46,7 @@ class WatchedMovies(models.Model):
     # Seeing what specific movies a user has saved
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='watched_movies')
 
-    # For seeing how popular a movie is (Could be a cool mnetric)
+    # For seeing how popular a movie is (Could be a cool metric)
     movie = models.ForeignKey(WatchedMovie, on_delete=models.CASCADE, related_name='watched_by') 
     added_at = models.DateTimeField(auto_now_add=True)
 

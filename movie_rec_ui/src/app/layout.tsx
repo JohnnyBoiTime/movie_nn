@@ -14,13 +14,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://movie-nn.vercel.app"),
   title: "Movie-nn",
-  description: "Movie neural network recommendation sevice",
+  robots: {index: true, follow: true},
+  alternates: {canonical: "/"},
+  description: "Movie neural network recommendation service. Uses a pre-trained neural network to recommend movies based on genres",
   verification: {
     google: "57pFdPPhd6mY0-iBjFC5ttjcnqzmDY_41rkSo7I5qXU"
   }
 };
-
 
 
 export default function RootLayout({
