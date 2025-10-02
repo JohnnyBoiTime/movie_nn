@@ -48,8 +48,12 @@ class WatchedMovies(models.Model):
 
     # Options 
     class Meta:
+
+        # Makes it so the user can only have 1 unique user and movie
         constraints = [
             models.UniqueConstraint(fields=["user", "movie"], name="unique_user_movies_watched"),
         ]
+
+        # Fastor lookups, optional but makes things faster with more data so why not add it?
         indexes = [models.Index(fields=["user", "added_at"])]
 
