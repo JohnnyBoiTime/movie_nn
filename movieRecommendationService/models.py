@@ -7,6 +7,8 @@ from django.conf import settings
 class Movie(models.Model):
     tmdb_id = models.PositiveIntegerField(unique=True, db_index=True) # Unique id to prevent repeat saves
     title = models.CharField(max_length=90)
+    # Allowing null and blank values are not necassary in this case,
+    # year, movie_poster_url, and description should all be required. 
     year = models.PositiveIntegerField(null=True, blank=True)
     movie_poster_url = models.URLField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
