@@ -1,19 +1,13 @@
-'use client';
-import Link from "next/link"
-// import { getServerSession } from "next-auth";
-// import { authOptions } from "./lib/auth";
-// import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "./lib/auth";
 
-// Landing page
-export default function Home() {
-    return (
-      <main>
-        <h1>
-          Welcome to movie-nn!! A pre-trained neural network to help you find movies you might like.
-        </h1>
-          <Link href="/login" style={{textDecoration: 'underline'}}>
-            Go to login!                
-          </Link>
-      </main>
-    )
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return redirect("/login");
+  } else {
+    return redirect("/recommendationPage");
+  }
 }

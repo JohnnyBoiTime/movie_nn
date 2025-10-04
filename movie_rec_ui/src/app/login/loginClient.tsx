@@ -52,6 +52,7 @@ export default function LoginPage() {
         <div>
             <div>
                 <h1 className="text-center text-4xl font-extrabol mb-8">Welcome to movieNN!</h1>
+                <h2 className="text-center text-xl mb-8"> Neural-network powered movie recommendation system.</h2>
             </div>
             <div className="h-screen w-full flex items-center justify-center px-4">
                 <div className="w-full max-w-sm  p-8 rounded-2xl shadow-lg border">
