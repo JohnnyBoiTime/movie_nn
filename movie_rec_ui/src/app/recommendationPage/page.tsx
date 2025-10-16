@@ -175,7 +175,7 @@ export default function RecommendationPage() {
                       <strong>{r.description}  </strong>
                     </div>
                     <div>
-                      <strong> r.trailer</strong>
+                      <strong> Movie trailer </strong>
                     </div>
                     <div>
                       <iframe 

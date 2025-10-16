@@ -79,6 +79,8 @@ export default function LoginPage() {
                             <button type="submit">
                                 Login 
                             </button>
+                            <a href="/login/lastfm">
+                            </a>
                     </form>
                     {/*
                     <div className="text-center border">
