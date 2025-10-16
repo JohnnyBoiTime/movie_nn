@@ -19,6 +19,8 @@ interface Movie {
     yearOfRelease: string,
     description: string,
     poster: string,
+    trailerSite: string,
+    trailerKey: string,
 };
 
 // Form of movie that is saved
@@ -171,6 +173,15 @@ export default function RecommendationPage() {
                     <strong>Description:</strong>
                     <div>
                       <strong>{r.description}  </strong>
+                    </div>
+                    <div>
+                      <strong> r.trailer</strong>
+                    </div>
+                    <div>
+                      <iframe 
+                      src={`https://www.youtube.com/embed/${r.trailerKey}`}
+                      >
+                      </iframe>  
                     </div>
                     {user.username === 'Guest' ? (
                       <div>

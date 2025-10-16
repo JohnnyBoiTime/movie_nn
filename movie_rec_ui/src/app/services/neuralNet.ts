@@ -3,13 +3,14 @@ import axios from "axios";
 
 // Format of the json response
 interface Movie {
-  id: number,
-  tmdb_id: number,
-  movie: string,
-  yearOfRelease: string,
-  description: string,
-  poster: string,
-  similarityScore: number
+    id: number,
+    tmdb_id: number,
+    movie: string,
+    yearOfRelease: string,
+    description: string,
+    poster: string,
+    trailerSite: string,
+    trailerKey: string,
 };
 
 // Gets the recommendations from the neural network

@@ -83,7 +83,7 @@ class RecommendationView(APIView):
                 tmdbResponse.raise_for_status()
                 tmdbData = tmdbResponse.json()
 
-                # Filter out some results for better stuff
+                # Return nothing if we have no results
                 results = tmdbData.get("results") or []
 
                 # May not be able to be queried,
@@ -113,7 +113,22 @@ class RecommendationView(APIView):
             moviePoster = f"https://image.tmdb.org/t/p/w200{moviePosterPath}"
             movieDescription = movieInfo.get("overview", "")
             tmdb_id = movieInfo.get("id")
+
+            # Get the trailer for the movie
+            urlForVideos = f"https://api.themoviedb.org/3/movie/{tmdb_id}/videos"
+            params = {
+                "api_key": settings.TMDB_API_KEY,
+            }
+
+            tmdbVideoResponse = requests.get(urlForVideos, params=params)
     
+            tmdbVideoResponse.raise_for_status()
+            tmdbVideoData = tmdbVideoResponse.json()
+            videoResults = tmdbVideoData.get("results") or []
+            firstTrailer = videoResults[0] if videoResults else "" # Grab first trailer, doesnt exist? Puts nothing
+
+            movieTrailerKey = firstTrailer.get("key") if firstTrailer else "No trailer found"
+            movieTrailerSite = firstTrailer.get("site") if firstTrailer else "No trailer found"
 
             # Send next.js the information for the movie
             data.append({
@@ -123,6 +138,8 @@ class RecommendationView(APIView):
                 "yearOfRelease": year,
                 "poster": moviePoster,
                 "description": movieDescription,
+                "trailerSite": movieTrailerSite,
+                "trailerKey": movieTrailerKey,
             })
 
         return JsonResponse(data,
