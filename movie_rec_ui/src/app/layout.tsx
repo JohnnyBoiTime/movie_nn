@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import StoreProvider from "./redux/StoreProvider";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "./globals.css"; // Error not sure why but still works so ok
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,7 +40,7 @@ export default function RootLayout({
       >
         { /* Provide the redux store to the application */}
         <StoreProvider>
-            {children}
+            <main id="main-content">{children}</main>
         </StoreProvider>
       </body>
     </html>
