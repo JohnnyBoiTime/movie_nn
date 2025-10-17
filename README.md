@@ -16,7 +16,8 @@ Features:
 - Movie recommendation gives description of movie and a trailer (courtesy of TMDB api)
 
 ![Demo](./assets/Movie_rec_demo.gif)
-![Demo](./assets/hideShowMusicPlayer.gif)
+![Demo](./assets/Watched_list_demo.gif)
+![Demo](./assets/Saving_movie_demo.gif)
 
 - Generate albums to play in app simply by placing an album folder with songs into assets and running node GenerateAlbums.js
 
@@ -41,5 +42,6 @@ Uses:
 - AsyncStorage
 - React navigation
 - Amazon AWS for backend (not completed or optimized but is ready to link)
+
 
 
