@@ -180,7 +180,7 @@ export default function RecommendationPage() {
                     <div className="mx-auto w-full max-w-6xl" > 
                       <div className="relative aspect-video">
                         <iframe 
-                        className="absolute inset-0 h-full rounded-xl"
+                        className="absolute inset-0 h-full w-full rounded-xl"
                         allowFullScreen
                         src={`https://www.youtube.com/embed/${r.trailerKey}`}
                         >
