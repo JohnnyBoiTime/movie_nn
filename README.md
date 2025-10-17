@@ -15,7 +15,7 @@ Features:
 - Can go in as guest to get recommendations, but need a login to save movies and create the watched movies
 - Movie recommendation gives description of movie and a trailer (courtesy of TMDB api)
 
-![Demo](./assets/skipPrevious.gif)
+![Demo](./assets/Movie_rec_demo.gif)
 ![Demo](./assets/hideShowMusicPlayer.gif)
 
 - Generate albums to play in app simply by placing an album folder with songs into assets and running node GenerateAlbums.js
@@ -41,4 +41,5 @@ Uses:
 - AsyncStorage
 - React navigation
 - Amazon AWS for backend (not completed or optimized but is ready to link)
+
 
