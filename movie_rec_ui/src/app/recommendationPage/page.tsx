@@ -177,11 +177,15 @@ export default function RecommendationPage() {
                     <div>
                       <strong> Movie trailer </strong>
                     </div>
-                    <div>
-                      <iframe 
-                      src={`https://www.youtube.com/embed/${r.trailerKey}`}
-                      >
-                      </iframe>  
+                    <div className="mx-auto w-full max-w-6xl" > 
+                      <div className="relative aspect-video">
+                        <iframe 
+                        className="absolute inset-0 h-full rounded-xl"
+                        allowFullScreen
+                        src={`https://www.youtube.com/embed/${r.trailerKey}`}
+                        >
+                        </iframe>  
+                      </div>
                     </div>
                     {user.username === 'Guest' ? (
                       <div>
