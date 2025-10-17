@@ -51,10 +51,11 @@ export default function LoginPage() {
     return (
         <div>
             <div>
+                <h1> Movie-nn | Movie neural network recommender | Movie recommendation system</h1>
                 <h1 className="text-center text-4xl font-extrabol mb-8">Welcome to movieNN!</h1>
-                <h2 className="text-center text-xl mb-8"> Neural-network powered movie recommendation system.</h2>
-                <h2 className="text-center text-xl mb-8"> Backend instance activates per request, so may take a while on first recommendation</h2>
-                <h2 className="text-center text-xl mb-8"> Since instance is on a cold start and needs to warm up</h2>
+                <h1 className="text-center text-xl mb-8">Neural-network powered movie recommendation system.</h1>
+                <h1 className="text-center text-xl mb-8">Movie-nn is a neural network powered movie recommender</h1>
+                <h1 className="text-center text-xl mb-8">model activates per request on google cloud, go first recommendation may take some time!</h1>
             </div>
             <div className="h-screen w-full flex items-center justify-center px-4">
                 <div className="w-full max-w-sm  p-8 rounded-2xl shadow-lg border">
