@@ -15,9 +15,9 @@ Features:
 
 ![Demo](./assets/Movie_rec_demo.gif)
 
-
 - Create a watched list of movies to keep track of what you have already watched
 ![Demo](./assets/Watched_list_demo.gif)
 
 - Save movies to watch in the future
 ![Demo](./assets/Saving_movie_demo.gif)
+
