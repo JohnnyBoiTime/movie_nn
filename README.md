@@ -11,37 +11,13 @@ A movie recommendation web app that is powered by a pytorch neural network.
 The pre-trained model is launched on google cloud via a docker image and activates per request, so first request may take some time.
 
 Features:
-- Log in to save movies or create a watched list
-- Can go in as guest to get recommendations, but need a login to save movies and create the watched movies
-- Movie recommendation gives description of movie and a trailer (courtesy of TMDB api)
+- Input movie name and year of release, along with amount of movies you want recommended and how many similar genres you want the recommended movies to have with the chosen movie
 
 ![Demo](./assets/Movie_rec_demo.gif)
+
+
+- Create a watched list of movies to keep track of what you have already watched
 ![Demo](./assets/Watched_list_demo.gif)
+
+- Save movies to watch in the future
 ![Demo](./assets/Saving_movie_demo.gif)
-
-- Generate albums to play in app simply by placing an album folder with songs into assets and running node GenerateAlbums.js
-
-![Demo](./assets/switchingAlbums.gif)
-  
-- Search through songs
-
-![Demo](./assets/searching.gif)
-
-- Make playlists
-
-![Demo](./assets/playlists.gif)
-  
-- Go to an artists page to see all their songs and albums
-
-![Demo](./assets/artistPage.gif)
-
-Uses:
-- React Redux and useContext, although redux is more heavily used
-- React native elements for UI
-- Various expo libraries for audio and sending files to device
-- AsyncStorage
-- React navigation
-- Amazon AWS for backend (not completed or optimized but is ready to link)
-
-
-
