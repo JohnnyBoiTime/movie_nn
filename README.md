@@ -12,16 +12,17 @@ The pre-trained model is launched on google cloud via a docker image and activat
 
 Features:
 
-- Input movie name and year of release, along with amount of movies you want recommended and how many similar genres you want the recommended movies to have with the chosen movie
+- Recommends movies along with their descriptions and a trailer to preview the movie.
 
 ![Demo](./assets/Movie_rec_demo.gif)
 
-- Create a watched list of movies to keep track of what you have already watched
+- Create a watched list of movies to keep track of what you have already watched.
 
 ![Demo](./assets/Watched_list_demo.gif)
 
-- Save movies to watch in the future
+- Save movies to watch in the future.
 
 ![Demo](./assets/Saving_movie_demo.gif)
+
 
 
