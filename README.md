@@ -1,5 +1,4 @@
-Uses the MovieLens dataset to train the model
-Uses TMDB api to get movie information (https://www.themoviedb.org/)
+Uses the MovieLens dataset to train the model, then uses TMDB api to get movie information (https://www.themoviedb.org/)
 
 movie_rec_ui contains next.js
 
@@ -23,6 +22,7 @@ Features:
 - Save movies to watch in the future.
 
 ![Demo](./assets/Saving_movie_demo.gif)
+
 
 
 
