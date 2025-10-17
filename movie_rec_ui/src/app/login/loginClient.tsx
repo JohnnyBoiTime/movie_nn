@@ -49,7 +49,7 @@ export default function LoginPage() {
     }
 
     return (
-        <main>
+        <div>
             <div>
                 <h1 className="text-center text-4xl font-extrabol mb-8">Welcome to movie-nn!</h1>
                 <p className="text-center text-xl mb-8">Movie-nn is a neural-network powered movie recommendation system.</p>
@@ -105,6 +105,6 @@ export default function LoginPage() {
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     );
 } 
