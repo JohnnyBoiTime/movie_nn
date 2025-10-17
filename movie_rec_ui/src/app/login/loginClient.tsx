@@ -53,7 +53,7 @@ export default function LoginPage() {
             <div>
                 <h1 className="text-center text-4xl font-extrabol mb-8">Welcome to movie-nn!</h1>
                 <p className="text-center text-xl mb-8">Movie-nn is a neural-network powered movie recommendation system.</p>
-                <p className="text-center text-xl mb-8">Model activates per request on google cloud, go first recommendation may take some time!</p>
+                <p className="text-center text-xl mb-8">Model activates per request on google cloud, so first recommendation/login/register may take some time!</p>
             </div>
             <div className="h-screen w-full flex items-center justify-center px-4">
                 <div className="w-full max-w-sm  p-8 rounded-2xl shadow-lg border">
