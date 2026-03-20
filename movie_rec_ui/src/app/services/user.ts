@@ -27,10 +27,10 @@ export async function registerUser(data: Registration) {
 
     try {
         console.log("Before response");
-    const response = await csrfRoute.post('/register/', data);
-    console.log("After response");
+        const response = await csrfRoute.post('/register/', data);
+        console.log("After response");
 
-    return response;
+        return response;
 
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
