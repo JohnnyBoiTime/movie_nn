@@ -37,8 +37,6 @@ export default function RecommendationPage() {
   const [addSavedMovie] = useAddSavedMovieMutation();
   const [addWatchedMovie] = useAddWatchedMovieMutation();
 
-  
-
   const router = useRouter();
 
   // Store results and let user know if loading or not

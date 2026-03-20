@@ -30,8 +30,13 @@ export default function LoginPage() {
     }
 
     return (
-        <div>
-            <div>
+        <div className="min-h-screen flex items-center justify-center bg-black-100">
+            <div className="bg-black p-8 rounded-2xl shadow-md w-full max-w-md">
+                <div className="justify-center items-center text-center">
+                    <h1 className="text-white text-xl font-bold mb-4">
+                        Create an Account
+                    </h1>
+                </div>
                 {/* Very basic registration form */}
                 <form onSubmit={registrationForm} className="flex flex-col space-y-4">
                     <input 
@@ -55,7 +60,9 @@ export default function LoginPage() {
                         onChange={e => setForm({...form, password: e.target.value})}
                         required
                     />
-                    <button type="submit">
+                    <button 
+                    type="submit"
+                    className="cursor-pointer">
                         Register
                     </button>
                 </form>
