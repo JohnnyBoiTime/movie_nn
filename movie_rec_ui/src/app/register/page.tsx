@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {registerUser} from "../services/user"
 
 export default function LoginPage() {
@@ -63,8 +64,11 @@ export default function LoginPage() {
                     <button 
                     type="submit"
                     className="cursor-pointer">
-                        Register
+                        Create account
                     </button>
+                    <Link href="./login" className="text-sm hover:underline text-center">
+                        Back to login.
+                    </Link>
                 </form>
             </div>
         </div>

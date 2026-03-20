@@ -57,7 +57,6 @@ export default function LoginPage() {
             </div>
             <div className="h-screen w-full flex items-center justify-center px-4">
                 <div className="w-full max-w-sm  p-8 rounded-2xl shadow-lg border">
-                    <h1 className="text-center">Log in</h1>
                      {/* Very basic login form */}
                     <form onSubmit={loginForm} className="flex flex-col space-y-4">
                         <input 
@@ -74,11 +73,10 @@ export default function LoginPage() {
                             onChange={e => setForm({...form, password: e.target.value})}
                             required
                         />
-
-                            <button type="submit">
+                            <button type="submit" className="cursor-pointer">
                                 Login 
                             </button>
-                            <a href="/login/lastfm">
+                            <a href="/recommendationPage">
                             </a>
                     </form>
                     {/*
