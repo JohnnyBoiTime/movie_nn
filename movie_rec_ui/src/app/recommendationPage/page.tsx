@@ -129,7 +129,7 @@ export default function RecommendationPage() {
                     ☰
                   </button>
                   {menuOpen && (
-                    <div>
+                    <div className="absolute">
                         <div>
                         <Link href='/savedMovies' style={{textDecoration: 'underline'}}>
                         Saved Movies
