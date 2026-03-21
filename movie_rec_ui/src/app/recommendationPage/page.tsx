@@ -43,6 +43,7 @@ export default function RecommendationPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [results, setResults] = useState<Movie[] | null | undefined | number>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const user = useSelector((state: RootState) => state.profile)
 
@@ -123,16 +124,25 @@ export default function RecommendationPage() {
             </div>
           ) : (
             <div>
-              <div>
-                <Link href='/savedMovies' style={{textDecoration: 'underline'}}>
-                Saved Movies
-                </Link>
-              </div>
-              <div>
-                <Link href='/watchedlist' style={{textDecoration: 'underline'}}>
-                Watched Movies
-                </Link>
-              </div>
+                <div className="relative">
+                  <button type="button" onClick={() => setMenuOpen(!menuOpen)} className="cursor-pointer rounded border px-3 py-2 text-xl">
+                    ☰
+                  </button>
+                  {menuOpen && (
+                    <div>
+                        <div>
+                        <Link href='/savedMovies' style={{textDecoration: 'underline'}}>
+                        Saved Movies
+                        </Link>
+                      </div>
+                      <div>
+                        <Link href='/watchedlist' style={{textDecoration: 'underline'}}>
+                        Watched Movies
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+            </div>
           </div>
           )}
         </div>
@@ -143,7 +153,7 @@ export default function RecommendationPage() {
             </Link>
           </div>
           ) : (
-            <div>        
+            <div>
             <button onClick={() => signOut({
               callbackUrl: "/"
               })}> Sign Out 
@@ -203,8 +213,6 @@ export default function RecommendationPage() {
                         </div>
                       </div>
                     )}
-
-                      
                   </div>
                   <br />
                 </li>
