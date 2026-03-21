@@ -1,7 +1,5 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../lib/auth";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 import { redirect } from "next/navigation";
 import LoginPage from "./loginClient";
 
