@@ -18,30 +18,30 @@ export const authOptions = {
                 username: {label: "Username", type: "text",},
                 password: {label: "Password", type: "password"}
             },
-        async authorize(credentials) {
+            async authorize(credentials) {
 
-            if (!credentials) return null;
+                if (credentials) {
 
-            try {
-                const response = await verifyUser({
-                    username: credentials.username,
-                    password: credentials.password,
-                });
+                    try {
+                    
+                        // Login the user by seeing if it exists in the database
+                    await verifyUser({
+                        username: credentials.username,
+                        password: credentials.password,
+                    })
 
-                if (response.status === 200) {
+                } catch (error) {
+                    console.log("Error logging in: ", error);
+                }
+                    // Return user if it exists
                     return {
-                        id: response.data.id ?? credentials.username,
-                        name: credentials.username,
+                        username: credentials.username,
+                        password: credentials.password
                     };
                 }
-
+                // Could not verify credentials
                 return null;
-
-            } catch (error) {
-                console.log("Error logging in: ", error);
-                return null; 
             }
-        }
         }),
     ],
     secret: process.env.NEXTAUTH_SECRET_KEY,

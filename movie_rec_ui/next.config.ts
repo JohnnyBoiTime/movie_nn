@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
      },
      {
        source: '/api/:path*',
-       destination: `${process.env.NEXT_PUBLIC_DJANGO_API_ROUTE}:path*/`, 
+       destination: `${process.env.NEXT_PUBLIC_DJANGO_API_ROUTE}/:path*`, 
      },
     ];
   },
