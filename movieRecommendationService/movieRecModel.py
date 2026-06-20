@@ -36,7 +36,7 @@ with open(genrePickle, "rb") as f:
 
 movies["genreList"] = movies.genres.str.split("|")
 
-# Turn saved binarizer into a one hot matrix
+# Turn saved binarizer into a multi-hot matrix
 genreMatrix = genreLE.transform(movies["genreList"])
 
 # get the movieIDs from the encoder 
@@ -74,8 +74,6 @@ movieEmbedds = F.normalize(movieEmbedds, dim=1)
 def recommendationSystemTest(movieTitle, movieYear, numGenres=1, k=5):
     query = movieTitle + ' (' + movieYear + ')'
 
-    
-
     # Make sure movie title is valid!
     if query not in titleToMovieId:
         raise KeyError("Movie does not exist in this model or incorrect input format")
@@ -96,7 +94,7 @@ def recommendationSystemTest(movieTitle, movieYear, numGenres=1, k=5):
     # Uncomment to make the movie not appear
     # calcSimilarity[index] = -1.0 # Don't recommend the same movie.
 
-    # Grab the one hot genre vector corresponding to
+    # Grab the multi hot genre vector corresponding to
     # corresponding to the chosen movie 
     # Shape = [genre]
     genreQuery = genreTensor[index]
