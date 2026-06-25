@@ -5,7 +5,7 @@ movie_rec_ui contains next.js
 Everythinge else
 is django
 
-A movie recommendation web app that is powered by a pytorch neural network. 
+A movie recommendation web app
 
 The pre-trained model is launched on google cloud via a docker image and activates per request, so first request may take some time.
 
