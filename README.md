@@ -7,7 +7,7 @@ is django
 
 A movie recommendation web app
 
-The pre-trained model is launched on google cloud via a docker image and activates per request, so first request may take some time.
+First request may take some time due to the container being configured to have a cold start.
 
 Features:
 
